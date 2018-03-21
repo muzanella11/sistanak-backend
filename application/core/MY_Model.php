@@ -201,8 +201,12 @@
             }
 
             $query  =   $this->db->query($sql);
-            if($query->num_rows() > 0){
+            $getError = $this->db->error();
+
+            if (!$getError['message'] && $query->num_rows() > 0) {
                 return $query->result();
+            } else {
+                return [];
             }
         }
 

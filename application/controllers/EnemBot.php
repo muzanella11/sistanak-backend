@@ -3,6 +3,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 require APPPATH . '/libraries/RestManager.php';
+require APPPATH . '/libraries/UserManagement.php';
+require APPPATH . '/libraries/CrudManagement.php';
 
 class EnemBot extends RestManager {
 
@@ -12,6 +14,146 @@ class EnemBot extends RestManager {
         parent::__construct();
 
         $this->load->model('enem_user_model');
+        $this->UserManagement = new UserManagement();
+        $this->CrudManagement = new CrudManagement();
+    }
+
+    public function getdatauser_get()
+    {
+        $queryString = $this->input->get();
+        $dataUser = $this->UserManagement->getListUser($queryString);
+
+        $data = [
+            'status' => 'Ok',
+            'messages' => 'Hello guys :)',
+            'data' => $dataUser
+        ];
+        
+        return $this->set_response($data, REST_Controller::HTTP_OK);
+    }
+
+    public function superadmin_post()
+    {
+        $dataModel = [
+            [
+                'className' => 'User',
+                'modelName' => 'UserModel',
+                'filter' => '',
+                'filterKey' => '',
+                'limit' => [
+                    'startLimit' => 0,
+                    'limitData' => 10000
+                ],
+                'dataMaster' => [
+                    'name' => 'Nurfirliana Muzanella',
+                    'user_name' => 'enem',
+                    'password' => '123',
+                    'email' => 'a@a.a',
+                    'user_role' => 0
+                ]
+            ]
+        ];
+        
+        $data = $this->CrudManagement->run($dataModel);
+        
+        // $this->crudmanagement->run($a, $b, $c);
+        // ini_set('max_execution_time', 0);
+        
+        // $start = microtime(TRUE);
+
+        // $getCatOrId = strtolower($this->uri->segment(3));
+        // $isEditOrDelete = strtolower($this->uri->segment(4));
+        
+        // $flag = 0;
+        // $data = [
+        //     'status' => 'Ok',
+        //     'messages' => ''
+        // ];
+
+        // if ($getCatOrId === 'create') // if has a category === create
+        // {
+        //     $data = [
+        //         'status' => 'Ok',
+        //         'messages' => 'Berhasil',
+        //         'data' => [
+        //             'getCatOrId' => $getCatOrId
+        //         ]
+        //     ];
+        // }
+        // else 
+        // {
+        //     if ($getCatOrId === null) // if category null
+        //     {
+        //         $flag = 1;
+        //         $data = [
+        //             'status' => 'Problem',
+        //             'messages' => 'Cat or Id not found'
+        //         ];
+        //     }
+        //     else
+        //     {
+        //         if (is_numeric($getCatOrId) && $isEditOrDelete && $isEditOrDelete === 'edit' || $isEditOrDelete === 'delete') // if numeric => action edit or delete
+        //         {
+        //             $data = [
+        //                 'status' => 'Ok',
+        //                 'messages' => 'Berhasil',
+        //                 'data' => [
+        //                     'getCatOrId' => $getCatOrId
+        //                 ]
+        //             ];
+        //         }
+        //         else
+        //         {
+        //             $flag = 1;
+        //             $data = [
+        //                 'status' => 'Problem',
+        //                 'messages' => 'Something wrong on parameter'
+        //             ];
+        //         }
+        //     }
+        // }
+
+        // $end = microtime(TRUE);
+        // $getRunTime = ($end-$start).' seconds';
+
+        // $dataMaster = $data['data'];
+        // $data['data'] = [
+        //     'lastData' => $enem_last_data,
+        //     'botTotal' => $enem_bot_total,
+        //     'runtime' => $getRunTime,
+        //     'dataMaster' => $dataMaster
+        // ];
+
+        // Batas
+
+        // $enemKey = $this->enem_templates->anti_injection(strtolower($this->post('enemKey')));
+        // $enemUsername = $this->enem_templates->anti_injection($this->post('enemUsername'));
+
+        // if ($enemKey)
+        // {
+        //     $end = microtime(TRUE);
+        //     $getRunTime = ($end-$start).' seconds';
+
+        //     $data = [
+        //         'status' => 'Ok',
+        //         'messages' => 'Success delete bot user',
+        //         'data' => [
+        //             'lastData' => $enem_last_data,
+        //             'botTotal' => $enem_bot_total,
+        //             'runtime' => $getRunTime,
+        //         ],
+        //     ];
+        // }
+        // else 
+        // {
+        //     $flag = 1;
+        //     $data = [
+        //         'status' => 'Problem',
+        //         'messages' => 'enemKey not found'
+        //     ];
+        // }
+
+        return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
     }
 
     public function botuser_post() 
