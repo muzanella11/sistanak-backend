@@ -66,7 +66,7 @@ class EnemBot extends RestManager {
     {
         $name = $this->post('name');
         $username = $this->post('username');
-        $password = $this->post('password');
+        $password = $this->enem_templates->enem_secret($this->post('password'));
         $email = $this->post('email');
         $user_role = $this->post('user_role');
 
@@ -104,7 +104,7 @@ class EnemBot extends RestManager {
     {
         $name = $this->put('name');
         $username = $this->put('username');
-        $password = $this->put('password');
+        $password = $this->enem_templates->enem_secret($this->put('password'));
         $email = $this->put('email');
         $user_role = $this->put('user_role');
 

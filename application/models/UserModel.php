@@ -17,7 +17,7 @@
         function addDataUser ($data) {
             $sql    =   "INSERT INTO enem_user (name, username, password, email, user_role, date_created)
                             VALUES('".$data['name']."', '".$data['username']."', '".$data['password']."', '".$data['email']."', '".$data['user_role']."', now())";
-
+            
             $this->db->query($sql);
 
             if ($this->db->trans_status() === FALSE)
@@ -82,7 +82,16 @@
             $email = "email='".$data['email']."'";
             $user_role = "user_role='".$data['user_role']."'";
 
-            $sql    =   "UPDATE enem_user SET ".$name.", ".$username.", ".$password.", ".$email.", ".$user_role.", date_update=now() WHERE ".$findBy."='".$findByValue."'";
+            $query = [];
+            foreach ($data as $key => $value) {
+                if ($value) {
+                    array_push($query, ${$key});
+                }
+            }
+
+            $queryResult = implode(',', $query);
+
+            $sql    =   "UPDATE enem_user SET ".$queryResult.", date_update=now() WHERE ".$findBy."='".$findByValue."'";
             $this->db->query($sql);
         }
 

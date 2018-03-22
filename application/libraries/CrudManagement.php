@@ -158,7 +158,7 @@ class CrudManagement {
         return $data;
     }
 
-    public function runModelPost ($model = [], $getCatOrId, $isEditOrDelete)
+    public function runModelPost ($model = [], $getCatOrId = null, $isEditOrDelete = null)
     {
         $flag = 0;
 
