@@ -3,6 +3,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 require APPPATH . '/libraries/RestManager.php';
+require APPPATH . '/libraries/CrudManagement.php';
 
 class EnemBotRole extends RestManager {
     function __construct () 
@@ -10,16 +11,121 @@ class EnemBotRole extends RestManager {
         // Construct the parent class
         parent::__construct();
         $this->load->model('enem_user_model');
+        $this->CrudManagement = new CrudManagement();
     }
 
-    public function index_get() 
+    public function superadmin_get()
     {
-        $data = [
-            'status' => 'Ok',
-            'messages' => 'Hello guys :)'
+        $queryString = $this->input->get(); // Query String for filter data :)
+
+        $config = [
+            'catIdSegment' => 3,
+            'isEditOrDeleteSegment' => 4
+        ];
+
+        $dataModel = [
+            [
+                'className' => 'Role',
+                'modelName' => 'RoleModel',
+                'filter' => '',
+                'filterKey' => '',
+                'limit' => [
+                    'startLimit' => 0,
+                    'limitData' => 10000
+                ],
+                'fieldTarget' => 'name',
+                'queryString' => $queryString,
+                'dataMaster' => []
+            ]
         ];
         
-        return $this->set_response($data, REST_Controller::HTTP_OK);
+        $data = $this->CrudManagement->run($config, $dataModel);
+
+        return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
+    }
+
+    public function superadmin_post()
+    {
+        $name = $this->post('name');
+        $status_role = $this->post('status_role');
+
+        $config = [
+            'catIdSegment' => 3,
+            'isEditOrDeleteSegment' => 4
+        ];
+
+        $dataModel = [
+            [
+                'className' => 'Role',
+                'modelName' => 'RoleModel',
+                'filter' => '',
+                'filterKey' => '',
+                'limit' => [
+                    'startLimit' => 0,
+                    'limitData' => 10000
+                ],
+                'dataMaster' => [
+                    'name' => $name,
+                    'status_role' => $status_role
+                ]
+            ]
+        ];
+        
+        $data = $this->CrudManagement->run($config, $dataModel);
+
+        return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
+    }
+
+    public function superadmin_put()
+    {
+        $name = $this->put('name');
+        $status_role = $this->put('status_role');
+
+        $config = [
+            'catIdSegment' => 3,
+            'isEditOrDeleteSegment' => 4
+        ];
+
+        $dataModel = [
+            [
+                'className' => 'Role',
+                'modelName' => 'RoleModel',
+                'filter' => '',
+                'filterKey' => '',
+                'limit' => [
+                    'startLimit' => 0,
+                    'limitData' => 10000
+                ],
+                'dataMaster' => [
+                    'name' => $name,
+                    'status_role' => $status_role
+                ]
+            ]
+        ];
+        
+        $data = $this->CrudManagement->run($config, $dataModel);
+
+        return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
+    }
+
+    public function superadmin_delete()
+    {
+        $config = [
+            'catIdSegment' => 3,
+            'isEditOrDeleteSegment' => 4
+        ];
+
+        $dataModel = [
+            [
+                'className' => 'Role',
+                'modelName' => 'RoleModel',
+                'fieldName' => 'role_id'
+            ]
+        ];
+        
+        $data = $this->CrudManagement->run($config, $dataModel);
+
+        return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
     }
 
     public function index_post() 
