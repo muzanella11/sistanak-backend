@@ -65,6 +65,7 @@ class EnemBot extends RestManager {
     public function superadmin_post()
     {
         $name = $this->post('name');
+        $nik = $this->post('nik');
         $username = $this->post('username');
         $password = $this->enem_templates->enem_secret($this->post('password'));
         $email = $this->post('email');
@@ -87,6 +88,7 @@ class EnemBot extends RestManager {
                 ],
                 'dataMaster' => [
                     'name' => $name,
+                    'nik' => $nik,
                     'username' => $username,
                     'password' => $password,
                     'email' => $email,
@@ -103,6 +105,7 @@ class EnemBot extends RestManager {
     public function superadmin_put()
     {
         $name = $this->put('name');
+        $nik = $this->put('nik');
         $username = $this->put('username');
         $password = $this->enem_templates->enem_secret($this->put('password'));
         $email = $this->put('email');
@@ -125,6 +128,7 @@ class EnemBot extends RestManager {
                 ],
                 'dataMaster' => [
                     'name' => $name,
+                    'nik' => $nik,
                     'username' => $username,
                     'password' => $password,
                     'email' => $email,

@@ -15,8 +15,8 @@
         }
 
         function addDataUser ($data) {
-            $sql    =   "INSERT INTO enem_user (name, username, password, email, user_role, date_created)
-                            VALUES('".$data['name']."', '".$data['username']."', '".$data['password']."', '".$data['email']."', '".$data['user_role']."', now())";
+            $sql    =   "INSERT INTO enem_user (name, nik, username, password, email, user_role, date_created)
+                            VALUES('".$data['name']."', '".$data['nik']."', '".$data['username']."', '".$data['password']."', '".$data['email']."', '".$data['user_role']."', now())";
             
             $this->db->query($sql);
 
@@ -77,6 +77,7 @@
 
         function updateDataUser($data, $findBy = 'user_id', $findByValue = '') {
             $name = "name='".$data['name']."'";
+            $nik = "nik='".$data['nik']."'";
             $username = "username='".$data['username']."'";
             $password = "password='".$data['password']."'";
             $email = "email='".$data['email']."'";
