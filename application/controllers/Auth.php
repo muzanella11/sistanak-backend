@@ -73,7 +73,7 @@ class Auth extends RestManager {
         {
             $flag = 1;
             $data['status'] = 'Problem';
-            $data['messages'] = 'Please insert email or username';
+            $data['messages'] = 'Please insert nik or email or username';
         }
         elseif (strpos($username, '@')) 
         {
@@ -95,6 +95,26 @@ class Auth extends RestManager {
                 $flag = 1;
                 $data['status'] = 'Problem';
                 $data['messages'] = 'Not found email registered';
+            }
+            elseif ($dataUser[0]->password !== $password) 
+            {
+                $flag = 1;
+                $data['status'] = 'Problem';
+                $data['messages'] = 'Credential not match';
+            }
+            else
+            {
+                $flag = 0;
+            }
+        }
+        elseif (is_numeric($username))
+        {
+            $dataUser = $this->enem_user_model->getEnemUserData('nik', $username);
+            if (!$dataUser) 
+            {
+                $flag = 1;
+                $data['status'] = 'Problem';
+                $data['messages'] = 'Not found nik registered';
             }
             elseif ($dataUser[0]->password !== $password) 
             {

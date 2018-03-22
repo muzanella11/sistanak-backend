@@ -179,6 +179,12 @@
                     } else {
                         $sql    =   "SELECT * FROM enem_user WHERE username='".$filter_key."'";
                     }
+                } elseif ($filter === 'nik') {
+                    if(is_array($limit)) {
+                        $sql    =   "SELECT * FROM enem_user WHERE nik='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
+                    } else {
+                        $sql    =   "SELECT * FROM enem_user WHERE nik='".$filter_key."'";
+                    }
                 } elseif ($filter === 'id') {
                     if(is_array($limit)) {
                         $sql    =   "SELECT * FROM enem_user WHERE user_id='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
