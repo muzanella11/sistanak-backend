@@ -32,8 +32,49 @@ class EnemBot extends RestManager {
         return $this->set_response($data, REST_Controller::HTTP_OK);
     }
 
+    public function superadmin_get()
+    {
+        $queryString = $this->input->get(); // Query String for filter data :)
+
+        $config = [
+            'catIdSegment' => 3,
+            'isEditOrDeleteSegment' => 4
+        ];
+
+        $dataModel = [
+            [
+                'className' => 'User',
+                'modelName' => 'UserModel',
+                'filter' => '',
+                'filterKey' => '',
+                'limit' => [
+                    'startLimit' => 0,
+                    'limitData' => 10000
+                ],
+                'fieldTarget' => 'name',
+                'queryString' => $queryString,
+                'dataMaster' => []
+            ]
+        ];
+        
+        $data = $this->CrudManagement->run($config, $dataModel);
+
+        return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
+    }
+
     public function superadmin_post()
     {
+        $name = $this->post('name');
+        $username = $this->post('username');
+        $password = $this->post('password');
+        $email = $this->post('email');
+        $user_role = $this->post('user_role');
+
+        $config = [
+            'catIdSegment' => 3,
+            'isEditOrDeleteSegment' => 4
+        ];
+
         $dataModel = [
             [
                 'className' => 'User',
@@ -45,113 +86,54 @@ class EnemBot extends RestManager {
                     'limitData' => 10000
                 ],
                 'dataMaster' => [
-                    'name' => 'Nurfirliana Muzanella',
-                    'user_name' => 'enem',
-                    'password' => '123',
-                    'email' => 'a@a.a',
-                    'user_role' => 0
+                    'name' => $name,
+                    'username' => $username,
+                    'password' => $password,
+                    'email' => $email,
+                    'user_role' => $user_role
                 ]
             ]
         ];
         
-        $data = $this->CrudManagement->run($dataModel);
+        $data = $this->CrudManagement->run($config, $dataModel);
+
+        return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
+    }
+
+    public function superadmin_put()
+    {
+        $name = $this->put('name');
+        $username = $this->put('username');
+        $password = $this->put('password');
+        $email = $this->put('email');
+        $user_role = $this->put('user_role');
+
+        $config = [
+            'catIdSegment' => 3,
+            'isEditOrDeleteSegment' => 4
+        ];
+
+        $dataModel = [
+            [
+                'className' => 'User',
+                'modelName' => 'UserModel',
+                'filter' => '',
+                'filterKey' => '',
+                'limit' => [
+                    'startLimit' => 0,
+                    'limitData' => 10000
+                ],
+                'dataMaster' => [
+                    'name' => $name,
+                    'username' => $username,
+                    'password' => $password,
+                    'email' => $email,
+                    'user_role' => $user_role
+                ]
+            ]
+        ];
         
-        // $this->crudmanagement->run($a, $b, $c);
-        // ini_set('max_execution_time', 0);
-        
-        // $start = microtime(TRUE);
-
-        // $getCatOrId = strtolower($this->uri->segment(3));
-        // $isEditOrDelete = strtolower($this->uri->segment(4));
-        
-        // $flag = 0;
-        // $data = [
-        //     'status' => 'Ok',
-        //     'messages' => ''
-        // ];
-
-        // if ($getCatOrId === 'create') // if has a category === create
-        // {
-        //     $data = [
-        //         'status' => 'Ok',
-        //         'messages' => 'Berhasil',
-        //         'data' => [
-        //             'getCatOrId' => $getCatOrId
-        //         ]
-        //     ];
-        // }
-        // else 
-        // {
-        //     if ($getCatOrId === null) // if category null
-        //     {
-        //         $flag = 1;
-        //         $data = [
-        //             'status' => 'Problem',
-        //             'messages' => 'Cat or Id not found'
-        //         ];
-        //     }
-        //     else
-        //     {
-        //         if (is_numeric($getCatOrId) && $isEditOrDelete && $isEditOrDelete === 'edit' || $isEditOrDelete === 'delete') // if numeric => action edit or delete
-        //         {
-        //             $data = [
-        //                 'status' => 'Ok',
-        //                 'messages' => 'Berhasil',
-        //                 'data' => [
-        //                     'getCatOrId' => $getCatOrId
-        //                 ]
-        //             ];
-        //         }
-        //         else
-        //         {
-        //             $flag = 1;
-        //             $data = [
-        //                 'status' => 'Problem',
-        //                 'messages' => 'Something wrong on parameter'
-        //             ];
-        //         }
-        //     }
-        // }
-
-        // $end = microtime(TRUE);
-        // $getRunTime = ($end-$start).' seconds';
-
-        // $dataMaster = $data['data'];
-        // $data['data'] = [
-        //     'lastData' => $enem_last_data,
-        //     'botTotal' => $enem_bot_total,
-        //     'runtime' => $getRunTime,
-        //     'dataMaster' => $dataMaster
-        // ];
-
-        // Batas
-
-        // $enemKey = $this->enem_templates->anti_injection(strtolower($this->post('enemKey')));
-        // $enemUsername = $this->enem_templates->anti_injection($this->post('enemUsername'));
-
-        // if ($enemKey)
-        // {
-        //     $end = microtime(TRUE);
-        //     $getRunTime = ($end-$start).' seconds';
-
-        //     $data = [
-        //         'status' => 'Ok',
-        //         'messages' => 'Success delete bot user',
-        //         'data' => [
-        //             'lastData' => $enem_last_data,
-        //             'botTotal' => $enem_bot_total,
-        //             'runtime' => $getRunTime,
-        //         ],
-        //     ];
-        // }
-        // else 
-        // {
-        //     $flag = 1;
-        //     $data = [
-        //         'status' => 'Problem',
-        //         'messages' => 'enemKey not found'
-        //     ];
-        // }
+        $data = $this->CrudManagement->run($config, $dataModel);
 
         return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
     }

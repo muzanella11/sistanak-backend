@@ -13,7 +13,7 @@ class CrudManagement {
         $this->CI->load->model('enem_user_model');
     }
 
-    public function run ($model = [])
+    public function run ($config = [], $model = [])
     {
         // $model = [
         //     [
@@ -33,8 +33,11 @@ class CrudManagement {
         
         $start = microtime(TRUE);
 
-        $getCatOrId = strtolower($this->CI->uri->segment(3));
-        $isEditOrDelete = strtolower($this->CI->uri->segment(4));
+        $catIdSegment = $config['catIdSegment'] ? $config['catIdSegment'] : 2;
+        $isEditOrDeleteSegment = $config['isEditOrDeleteSegment'] ? $config['isEditOrDeleteSegment'] : 3;
+
+        $getCatOrId = strtolower($this->CI->uri->segment($catIdSegment));
+        $isEditOrDelete = strtolower($this->CI->uri->segment($isEditOrDeleteSegment));
         
         $flag = 0;
         $data = [
@@ -78,13 +81,29 @@ class CrudManagement {
             {
                 if (is_numeric($getCatOrId) && $isEditOrDelete && $isEditOrDelete === 'edit' || $isEditOrDelete === 'delete') // if numeric => action edit or delete
                 {
-                    $data = [
-                        'status' => 'Ok',
-                        'messages' => 'Berhasil',
-                        'data' => [
-                            'getCatOrId' => $getCatOrId
-                        ]
-                    ];
+                    if ($isEditOrDelete === 'edit')
+                    {
+                        $dataModel = $this->runModelPost($model, $getCatOrId, $isEditOrDelete);
+
+                        if ($dataModel['flag'])
+                        {
+                            $flag = $dataModel['flag'];
+                            unset($dataModel['flag']);
+
+                            $data = $dataModel;
+                        }
+                        else
+                        {
+                            $data = [
+                                'status' => 'Ok',
+                                'messages' => 'Berhasil',
+                                'data' => [
+                                    'getCatOrId' => $getCatOrId
+                                ]
+                            ];
+                        }
+                    }
+
                 }
                 elseif (is_numeric($getCatOrId))
                 {
@@ -105,6 +124,19 @@ class CrudManagement {
                 }
                 else
                 {
+                    $newModel = [];
+                    foreach ($model as $key => $value) {
+                        $queryString = $value['queryString'];
+                        if ($queryString['q']) {
+                            $value['filter'] = 'search';
+                            $value['filterKey'] = $queryString['q'];
+                            $value['limit'] = null;
+                        }
+                        array_push($newModel, $value);
+                    }
+
+                    $model = $newModel;
+
                     $dataMaster = $this->runModelGet($model, $getCatOrId); // read all data
                     $data = [
                         'status' => 'Ok',
@@ -126,13 +158,17 @@ class CrudManagement {
         return $data;
     }
 
-    public function runModelPost ($model = [], $getCatOrId)
+    public function runModelPost ($model = [], $getCatOrId, $isEditOrDelete)
     {
         $flag = 0;
 
         if ($getCatOrId === 'create')
         {
             $getMethodName = 'addData';
+        }
+        elseif ($isEditOrDelete === 'edit')
+        {
+            $getMethodName = 'updateData';
         }
         else 
         {
@@ -146,7 +182,14 @@ class CrudManagement {
                 $value['methodName'] = $methodName;
 
                 $this->CI->load->model($value['modelName']);
-                $this->CI->{$value['modelName']}->{$value['methodName']}($value['dataMaster']);
+                if ($getCatOrId === 'create')
+                {
+                    $this->CI->{$value['modelName']}->{$value['methodName']}($value['dataMaster']);
+                }
+                else if ($isEditOrDelete === 'edit')
+                {
+                    $this->CI->{$value['modelName']}->{$value['methodName']}($value['dataMaster'], 'user_id', $getCatOrId);
+                }
             }
 
             $data = [
@@ -175,7 +218,7 @@ class CrudManagement {
             $value['methodName'] = $methodName;
 
             $this->CI->load->model($value['modelName']);
-            $data = $this->CI->{$value['modelName']}->{$value['methodName']}($value['filter'], $value['filterKey'], $value['limit']);
+            $data = $this->CI->{$value['modelName']}->{$value['methodName']}($value['filter'], $value['filterKey'], $value['limit'], $value['fieldTarget']);
         }
 
         return $data;

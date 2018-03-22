@@ -16,7 +16,7 @@
 
         function addDataUser ($data) {
             $sql    =   "INSERT INTO enem_user (name, username, password, email, user_role, date_created)
-                            VALUES('".$data['name']."', '".$data['user_name']."', '".$data['password']."', '".$data['email']."', '".$data['user_role']."', now())";
+                            VALUES('".$data['name']."', '".$data['username']."', '".$data['password']."', '".$data['email']."', '".$data['user_role']."', now())";
 
             $this->db->query($sql);
 
@@ -30,13 +30,19 @@
             }
         }
 
-        function getDataUser ($filter = NULL, $filter_key = NULL, $limit = NULL) {
+        function getDataUser ($filter = NULL, $filter_key = NULL, $limit = NULL, $field_target = NULL) {
             if(!empty($filter) && !empty($filter_key)) {
                 if($filter === 'id') {
                     if(is_array($limit)) {
                         $sql    =   "SELECT * FROM enem_user WHERE user_id='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
                     } else {
                         $sql    =   "SELECT * FROM enem_user WHERE user_id='".$filter_key."'";
+                    }
+                } elseif ($filter === 'search') {
+                    if(is_array($limit)) {
+                        $sql    =   "SELECT * FROM enem_user WHERE ".$field_target." LIKE '%".$filter_key."%' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
+                    } else {
+                        $sql    =   "SELECT * FROM enem_user WHERE ".$field_target." LIKE '%".$filter_key."%'";
                     }
                 } elseif ($filter === 'username') {
                     if(is_array($limit)) {
@@ -67,6 +73,17 @@
             } else {
                 return [];
             }
+        }
+
+        function updateDataUser($data, $findBy = 'user_id', $findByValue = '') {
+            $name = "name='".$data['name']."'";
+            $username = "username='".$data['username']."'";
+            $password = "password='".$data['password']."'";
+            $email = "email='".$data['email']."'";
+            $user_role = "user_role='".$data['user_role']."'";
+
+            $sql    =   "UPDATE enem_user SET ".$name.", ".$username.", ".$password.", ".$email.", ".$user_role.", date_update=now() WHERE ".$findBy."='".$findByValue."'";
+            $this->db->query($sql);
         }
 
         function addUserBalance($data) {

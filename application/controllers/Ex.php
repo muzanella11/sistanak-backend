@@ -21,4 +21,14 @@ class Ex extends RestManager {
         
         return $this->set_response($data, REST_Controller::HTTP_OK);
     }
+
+    public function index_post() 
+    {
+        $data = [
+            'status' => 'Ok',
+            'messages' => 'Hello guys post :)'
+        ];
+        
+        return $this->set_response($data, REST_Controller::HTTP_OK);
+    }
 }
