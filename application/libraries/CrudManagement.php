@@ -60,7 +60,7 @@ class CrudManagement {
             {
                 $data = [
                     'status' => 'Ok',
-                    'messages' => 'Berhasil',
+                    'messages' => 'Berhasil Membuat Data',
                     'data' => [
                         'getCatOrId' => $getCatOrId
                     ]
@@ -96,7 +96,29 @@ class CrudManagement {
                         {
                             $data = [
                                 'status' => 'Ok',
-                                'messages' => 'Berhasil',
+                                'messages' => 'Berhasil Mengubah Data',
+                                'data' => [
+                                    'getCatOrId' => $getCatOrId
+                                ]
+                            ];
+                        }
+                    }
+                    elseif ($isEditOrDelete === 'delete')
+                    {
+                        $dataModel = $this->runModelPost($model, $getCatOrId, $isEditOrDelete);
+
+                        if ($dataModel['flag'])
+                        {
+                            $flag = $dataModel['flag'];
+                            unset($dataModel['flag']);
+
+                            $data = $dataModel;
+                        }
+                        else
+                        {
+                            $data = [
+                                'status' => 'Ok',
+                                'messages' => 'Berhasil Menghapus Data',
                                 'data' => [
                                     'getCatOrId' => $getCatOrId
                                 ]
@@ -170,6 +192,10 @@ class CrudManagement {
         {
             $getMethodName = 'updateData';
         }
+        elseif ($isEditOrDelete === 'delete')
+        {
+            $getMethodName = 'deleteData';
+        }
         else 
         {
             $flag = 1;
@@ -189,6 +215,11 @@ class CrudManagement {
                 else if ($isEditOrDelete === 'edit')
                 {
                     $this->CI->{$value['modelName']}->{$value['methodName']}($value['dataMaster'], 'user_id', $getCatOrId);
+                }
+                else if ($isEditOrDelete === 'delete')
+                {
+                    $value['fieldValue'] = $getCatOrId;
+                    $this->CI->{$value['modelName']}->{$value['methodName']}($value['fieldName'], $value['fieldValue']);
                 }
             }
 

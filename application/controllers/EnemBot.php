@@ -142,6 +142,26 @@ class EnemBot extends RestManager {
         return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
     }
 
+    public function superadmin_delete()
+    {
+        $config = [
+            'catIdSegment' => 3,
+            'isEditOrDeleteSegment' => 4
+        ];
+
+        $dataModel = [
+            [
+                'className' => 'User',
+                'modelName' => 'UserModel',
+                'fieldName' => 'user_id'
+            ]
+        ];
+        
+        $data = $this->CrudManagement->run($config, $dataModel);
+
+        return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
+    }
+
     public function botuser_post() 
     {
         ini_set('max_execution_time', 0);
