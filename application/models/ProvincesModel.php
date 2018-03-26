@@ -87,10 +87,7 @@
             if (!$getError['message'] && $query->num_rows() > 0) {
                 return $query->result();
             } else {
-                return [
-                    'flag' => 1,
-                    'messages' => 'Gagal mengambil data'
-                ];
+                return [];
             }
         }
 

@@ -9,16 +9,16 @@
 
 ?>
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-    class UserModel extends MY_Model {
-        private $tableName = 'enem_user';
+    class RegenciesModel extends MY_Model {
+        private $tableName = 'enem_ids_regencies';
 
         function __construct(){
             parent::__construct();
         }
 
-        function addDataUser ($data) {
-            $sql    =   "INSERT INTO {$this->tableName} (name, nik, username, password, email, user_role, date_created)
-                            VALUES('".$data['name']."', '".$data['nik']."', '".$data['username']."', '".$data['password']."', '".$data['email']."', '".$data['user_role']."', now())";
+        function addDataRegencies ($data) {
+            $sql    =   "INSERT INTO {$this->tableName} (name, province_id, regencies_id)
+                            VALUES('".strtoupper($data['name'])."', '".$data['province_id']."', '".$data['regencies_id']."')";
             
             $query  =   $this->db->query($sql);
 
@@ -46,13 +46,13 @@
             }
         }
 
-        function getDataUser ($filter = NULL, $filter_key = NULL, $limit = NULL, $field_target = NULL) {
+        function getDataRegencies ($filter = NULL, $filter_key = NULL, $limit = NULL, $field_target = NULL) {
             if(!empty($filter) && !empty($filter_key)) {
                 if($filter === 'id') {
                     if(is_array($limit)) {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE user_id='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE regencies_id='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
                     } else {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE user_id='".$filter_key."'";
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE regencies_id='".$filter_key."'";
                     }
                 } elseif ($filter === 'search') {
                     if(is_array($limit)) {
@@ -60,11 +60,11 @@
                     } else {
                         $sql    =   "SELECT * FROM {$this->tableName} WHERE ".$field_target." LIKE '%".$filter_key."%'";
                     }
-                } elseif ($filter === 'username') {
+                } elseif ($filter === 'name') {
                     if(is_array($limit)) {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE username='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE name='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
                     } else {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE username='".$filter_key."'";
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE name='".$filter_key."'";
                     }
                 } elseif ($filter === 'create_sql') {
                     if(is_array($limit)) {
@@ -91,13 +91,10 @@
             }
         }
 
-        function updateDataUser($data, $findBy = 'user_id', $findByValue = '') {
-            $name = "name='".$data['name']."'";
-            $nik = "nik='".$data['nik']."'";
-            $username = "username='".$data['username']."'";
-            $password = "password='".$data['password']."'";
-            $email = "email='".$data['email']."'";
-            $user_role = "user_role='".$data['user_role']."'";
+        function updateDataRegencies($data, $findBy = '', $findByValue = '') {
+            $name = "name='".strtoupper($data['name'])."'";
+            $regencies_id = "regencies_id='".$data['regencies_id']."'";
+            $findBy = 'regencies_id';
 
             $query = [];
             foreach ($data as $key => $value) {
@@ -107,8 +104,8 @@
             }
 
             $queryResult = implode(',', $query);
-
-            $sql    =   "UPDATE {$this->tableName} SET ".$queryResult.", date_update=now() WHERE ".$findBy."='".$findByValue."'";
+            
+            $sql    =   "UPDATE {$this->tableName} SET ".$queryResult." WHERE ".$findBy."='".$findByValue."'";
             
             $query  =   $this->db->query($sql);
             $getError = $this->db->error();
@@ -126,7 +123,7 @@
             }
         }
 
-        function deleteDataUser($field_name, $field_value) {
+        function deleteDataRegencies($field_name, $field_value) {
             $sql    =   "DELETE FROM {$this->tableName} WHERE ".$field_name." = '".$field_value."'";
             
             $query  =   $this->db->query($sql);
