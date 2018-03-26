@@ -18,7 +18,7 @@
 
         function addDataProvinces ($data) {
             $sql    =   "INSERT INTO {$this->tableName} (name, provinces_id)
-                            VALUES('".$data['name']."', '".$data['provinces_id']."')";
+                            VALUES('".strtoupper($data['name'])."', '".$data['provinces_id']."')";
             
             $query  =   $this->db->query($sql);
 
