@@ -10,12 +10,14 @@
 ?>
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
     class RoleModel extends MY_Model {
+        private $tableName = 'enem_user_role';
+
         function __construct(){
             parent::__construct();
         }
 
         function addDataRole ($data) {
-            $sql    =   "INSERT INTO enem_user_role (name, status_role, date_created)
+            $sql    =   "INSERT INTO {$this->tableName} (name, status_role, date_created)
                             VALUES('".$data['name']."', '".$data['status_role']."', now())";
             
             $this->db->query($sql);
@@ -34,34 +36,34 @@
             if(!empty($filter) && !empty($filter_key)) {
                 if($filter === 'id') {
                     if(is_array($limit)) {
-                        $sql    =   "SELECT * FROM enem_user_role WHERE role_id='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE role_id='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
                     } else {
-                        $sql    =   "SELECT * FROM enem_user_role WHERE role_id='".$filter_key."'";
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE role_id='".$filter_key."'";
                     }
                 } elseif ($filter === 'search') {
                     if(is_array($limit)) {
-                        $sql    =   "SELECT * FROM enem_user_role WHERE ".$field_target." LIKE '%".$filter_key."%' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE ".$field_target." LIKE '%".$filter_key."%' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
                     } else {
-                        $sql    =   "SELECT * FROM enem_user_role WHERE ".$field_target." LIKE '%".$filter_key."%'";
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE ".$field_target." LIKE '%".$filter_key."%'";
                     }
                 } elseif ($filter === 'name') {
                     if(is_array($limit)) {
-                        $sql    =   "SELECT * FROM enem_user_role WHERE name='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE name='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
                     } else {
-                        $sql    =   "SELECT * FROM enem_user_role WHERE name='".$filter_key."'";
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE name='".$filter_key."'";
                     }
                 } elseif ($filter === 'create_sql') {
                     if(is_array($limit)) {
-                        $sql    =   "SELECT * FROM enem_user_role WHERE ".$filter_key." LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE ".$filter_key." LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
                     } else {
-                        $sql    =   "SELECT * FROM enem_user_role WHERE ".$filter_key."";
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE ".$filter_key."";
                     }
                 }
             } else {
                 if(is_array($limit)) {
-                    $sql    =   "SELECT * FROM enem_user_role LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
+                    $sql    =   "SELECT * FROM {$this->tableName} LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
                 } else {
-                    $sql    =   "SELECT * FROM enem_user_role";
+                    $sql    =   "SELECT * FROM {$this->tableName}";
                 }
             }
 
@@ -89,12 +91,12 @@
 
             $queryResult = implode(',', $query);
             
-            $sql    =   "UPDATE enem_user_role SET ".$queryResult.", date_update=now() WHERE ".$findBy."='".$findByValue."'";
+            $sql    =   "UPDATE {$this->tableName} SET ".$queryResult.", date_update=now() WHERE ".$findBy."='".$findByValue."'";
             $this->db->query($sql);
         }
 
         function deleteDataRole($field_name, $field_value) {
-            $sql    =   "DELETE FROM enem_user_role WHERE ".$field_name." = '".$field_value."'";
+            $sql    =   "DELETE FROM {$this->tableName} WHERE ".$field_name." = '".$field_value."'";
             $this->db->query($sql);
         }
     }

@@ -146,20 +146,7 @@ class CrudManagement {
                 }
                 else
                 {
-                    $newModel = [];
-                    foreach ($model as $key => $value) {
-                        $queryString = $value['queryString'];
-                        if ($queryString['q']) {
-                            $value['filter'] = 'search';
-                            $value['filterKey'] = $queryString['q'];
-                            $value['limit'] = null;
-                        }
-                        array_push($newModel, $value);
-                    }
-
-                    $model = $newModel;
-
-                    $dataMaster = $this->runModelGet($model, $getCatOrId); // read all data
+                    $dataMaster = $this->runModelGet($model, $getCatOrId); // read all data and filter
                     $data = [
                         'status' => 'Ok',
                         'messages' => 'Berhasil',
