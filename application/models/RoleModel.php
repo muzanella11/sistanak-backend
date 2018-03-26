@@ -20,7 +20,7 @@
             $sql    =   "INSERT INTO {$this->tableName} (name, status_role, date_created)
                             VALUES('".$data['name']."', '".$data['status_role']."', now())";
             
-            $this->db->query($sql);
+            $query  =   $this->db->query($sql);
 
             if ($this->db->trans_status() === FALSE)
             {
@@ -29,6 +29,20 @@
             else
             {
                 $this->db->trans_commit();
+            }
+
+            $getError = $this->db->error();
+
+            if (!$getError['message']) {
+                return [
+                    'flag' => 0,
+                    'messages' => 'Berhasil menambahkan data'
+                ];
+            } else {
+                return [
+                    'flag' => 1,
+                    'messages' => 'Gagal menambahkan data'
+                ];
             }
         }
 
@@ -92,12 +106,40 @@
             $queryResult = implode(',', $query);
             
             $sql    =   "UPDATE {$this->tableName} SET ".$queryResult.", date_update=now() WHERE ".$findBy."='".$findByValue."'";
-            $this->db->query($sql);
+            
+            $query  =   $this->db->query($sql);
+            $getError = $this->db->error();
+
+            if (!$getError['message']) {
+                return [
+                    'flag' => 0,
+                    'messages' => 'Berhasil mengubah data'
+                ];
+            } else {
+                return [
+                    'flag' => 1,
+                    'messages' => 'Gagal mengubah data'
+                ];
+            }
         }
 
         function deleteDataRole($field_name, $field_value) {
             $sql    =   "DELETE FROM {$this->tableName} WHERE ".$field_name." = '".$field_value."'";
-            $this->db->query($sql);
+            
+            $query  =   $this->db->query($sql);
+            $getError = $this->db->error();
+
+            if (!$getError['message']) {
+                return [
+                    'flag' => 0,
+                    'messages' => 'Berhasil menghapus data'
+                ];
+            } else {
+                return [
+                    'flag' => 1,
+                    'messages' => 'Gagal menghapus data'
+                ];
+            }
         }
     }
 ?>

@@ -38,6 +38,19 @@ class EnemBotRole extends RestManager {
                 'dataMaster' => []
             ]
         ];
+
+        if (isset($queryString) && count($queryString) > 0) {
+            foreach ($queryString as $key => $value) {
+                if (!$value)
+                {
+                    $queryString[$key] = 'null';
+                }
+            }
+
+            $dataModel[0]['filter'] = 'create_sql';
+            $dataModel[0]['filterKey'] = 'name like "%'.$queryString['q'].'%" or user_role like "%'.$queryString['status_role'].'%"';
+            $dataModel[0]['fieldTarget'] = null;
+        }
         
         $data = $this->CrudManagement->run($config, $dataModel);
 

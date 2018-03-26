@@ -188,7 +188,7 @@ class CrudManagement {
             $flag = 1;
         }
 
-        if (!$flag)
+        if ($model)
         {
             foreach ($model as $key => $value) {
                 $methodName = $getMethodName.$value['className'];
@@ -197,19 +197,31 @@ class CrudManagement {
                 $this->CI->load->model($value['modelName']);
                 if ($getCatOrId === 'create')
                 {
-                    $this->CI->{$value['modelName']}->{$value['methodName']}($value['dataMaster']);
+                    $data = $this->CI->{$value['modelName']}->{$value['methodName']}($value['dataMaster']);
+                    $flag = $data['flag'];
                 }
                 else if ($isEditOrDelete === 'edit')
                 {
-                    $this->CI->{$value['modelName']}->{$value['methodName']}($value['dataMaster'], 'user_id', $getCatOrId);
+                    $data = $this->CI->{$value['modelName']}->{$value['methodName']}($value['dataMaster'], 'user_id', $getCatOrId);
+                    $flag = $data['flag'];
                 }
                 else if ($isEditOrDelete === 'delete')
                 {
                     $value['fieldValue'] = $getCatOrId;
-                    $this->CI->{$value['modelName']}->{$value['methodName']}($value['fieldName'], $value['fieldValue']);
+                    $data = $this->CI->{$value['modelName']}->{$value['methodName']}($value['fieldName'], $value['fieldValue']);
+                    $flag = $data['flag'];
+                } else {
+                    $flag = 1;
                 }
             }
+        }
+        else
+        {
+            $flag = 1;
+        }
 
+        if (!$flag)
+        {
             $data = [
                 'flag' => $flag,
                 'status' => 'Ok',

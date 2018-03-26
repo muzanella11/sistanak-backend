@@ -40,6 +40,19 @@ class EnemBotProvinces extends RestManager {
                 'dataMaster' => []
             ]
         ];
+
+        if (isset($queryString) && count($queryString) > 0) {
+            foreach ($queryString as $key => $value) {
+                if (!$value)
+                {
+                    $queryString[$key] = 'null';
+                }
+            }
+
+            $dataModel[0]['filter'] = 'create_sql';
+            $dataModel[0]['filterKey'] = 'name like "%'.$queryString['q'].'%" or provinces_id like "%'.$queryString['province'].'%"';
+            $dataModel[0]['fieldTarget'] = null;
+        }
         
         $data = $this->CrudManagement->run($config, $dataModel);
 
@@ -49,7 +62,7 @@ class EnemBotProvinces extends RestManager {
     public function superadmin_post()
     {
         $name = $this->post('name');
-        $status_role = $this->post('status_role');
+        $provinces_id = $this->post('provinces_id');
 
         $config = [
             'catIdSegment' => 3,
@@ -68,7 +81,7 @@ class EnemBotProvinces extends RestManager {
                 ],
                 'dataMaster' => [
                     'name' => $name,
-                    'status_role' => $status_role
+                    'provinces_id' => $provinces_id
                 ]
             ]
         ];
@@ -81,7 +94,7 @@ class EnemBotProvinces extends RestManager {
     public function superadmin_put()
     {
         $name = $this->put('name');
-        $status_role = $this->put('status_role');
+        $provinces_id = $this->put('provinces_id');
 
         $config = [
             'catIdSegment' => 3,
@@ -100,7 +113,7 @@ class EnemBotProvinces extends RestManager {
                 ],
                 'dataMaster' => [
                     'name' => $name,
-                    'status_role' => $status_role
+                    'provinces_id' => $provinces_id
                 ]
             ]
         ];

@@ -17,10 +17,10 @@
         }
 
         function addDataProvinces ($data) {
-            $sql    =   "INSERT INTO {$this->tableName} (name, status_role, date_created)
-                            VALUES('".$data['name']."', '".$data['status_role']."', now())";
+            $sql    =   "INSERT INTO {$this->tableName} (name, provinces_id)
+                            VALUES('".$data['name']."', '".$data['provinces_id']."')";
             
-            $this->db->query($sql);
+            $query  =   $this->db->query($sql);
 
             if ($this->db->trans_status() === FALSE)
             {
@@ -30,15 +30,29 @@
             {
                 $this->db->trans_commit();
             }
+
+            $getError = $this->db->error();
+
+            if (!$getError['message']) {
+                return [
+                    'flag' => 0,
+                    'messages' => 'Berhasil menambahkan data'
+                ];
+            } else {
+                return [
+                    'flag' => 1,
+                    'messages' => 'Gagal menambahkan data'
+                ];
+            }
         }
 
         function getDataProvinces ($filter = NULL, $filter_key = NULL, $limit = NULL, $field_target = NULL) {
             if(!empty($filter) && !empty($filter_key)) {
                 if($filter === 'id') {
                     if(is_array($limit)) {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE role_id='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE provinces_id='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
                     } else {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE role_id='".$filter_key."'";
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE provinces_id='".$filter_key."'";
                     }
                 } elseif ($filter === 'search') {
                     if(is_array($limit)) {
@@ -73,14 +87,17 @@
             if (!$getError['message'] && $query->num_rows() > 0) {
                 return $query->result();
             } else {
-                return [];
+                return [
+                    'flag' => 1,
+                    'messages' => 'Gagal mengambil data'
+                ];
             }
         }
 
         function updateDataProvinces($data, $findBy = '', $findByValue = '') {
-            $name = "name='".$data['name']."'";
-            $status_role = "status_role='".$data['status_role']."'";
-            $findBy = 'role_id';
+            $name = "name='".strtoupper($data['name'])."'";
+            $provinces_id = "provinces_id='".$data['provinces_id']."'";
+            $findBy = 'provinces_id';
 
             $query = [];
             foreach ($data as $key => $value) {
@@ -91,13 +108,41 @@
 
             $queryResult = implode(',', $query);
             
-            $sql    =   "UPDATE {$this->tableName} SET ".$queryResult.", date_update=now() WHERE ".$findBy."='".$findByValue."'";
-            $this->db->query($sql);
+            $sql    =   "UPDATE {$this->tableName} SET ".$queryResult." WHERE ".$findBy."='".$findByValue."'";
+            
+            $query  =   $this->db->query($sql);
+            $getError = $this->db->error();
+
+            if (!$getError['message']) {
+                return [
+                    'flag' => 0,
+                    'messages' => 'Berhasil mengubah data'
+                ];
+            } else {
+                return [
+                    'flag' => 1,
+                    'messages' => 'Gagal mengubah data'
+                ];
+            }
         }
 
         function deleteDataProvinces($field_name, $field_value) {
             $sql    =   "DELETE FROM {$this->tableName} WHERE ".$field_name." = '".$field_value."'";
-            $this->db->query($sql);
+            
+            $query  =   $this->db->query($sql);
+            $getError = $this->db->error();
+
+            if (!$getError['message']) {
+                return [
+                    'flag' => 0,
+                    'messages' => 'Berhasil menghapus data'
+                ];
+            } else {
+                return [
+                    'flag' => 1,
+                    'messages' => 'Gagal menghapus data'
+                ];
+            }
         }
     }
 ?>
