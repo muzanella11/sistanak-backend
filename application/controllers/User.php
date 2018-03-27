@@ -64,6 +64,7 @@ class User extends RestManager {
         $username = $this->post('username');
         $password = $this->enem_templates->enem_secret($this->post('password'));
         $email = $this->post('email');
+        $phone = $this->post('phone');
         $user_role = $this->post('user_role');
 
         $config = [
@@ -87,6 +88,7 @@ class User extends RestManager {
                     'username' => $username,
                     'password' => $password,
                     'email' => $email,
+                    'phone' => $phone,
                     'user_role' => $user_role
                 ]
             ]
@@ -104,7 +106,9 @@ class User extends RestManager {
         $username = $this->put('username');
         $password = $this->enem_templates->enem_secret($this->put('password'));
         $email = $this->put('email');
+        $phone = $this->put('phone');
         $user_role = $this->put('user_role');
+        $assign_task = $this->put('assign_task');
 
         $config = [
             'catIdSegment' => 2,
@@ -127,7 +131,9 @@ class User extends RestManager {
                     'username' => $username,
                     'password' => $password,
                     'email' => $email,
-                    'user_role' => $user_role
+                    'phone' => $phone,
+                    'user_role' => $user_role,
+                    'assign_task' => $assign_task
                 ]
             ]
         ];

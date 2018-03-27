@@ -9,16 +9,16 @@
 
 ?>
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-    class UserModel extends MY_Model {
-        private $tableName = 'enem_user';
+    class AnimalModel extends MY_Model {
+        private $tableName = 'enem_animals';
 
         function __construct(){
             parent::__construct();
         }
 
-        function addDataUser ($data) {
-            $sql    =   "INSERT INTO {$this->tableName} (name, nik, username, password, email, phone, user_role, date_created)
-                            VALUES('".$data['name']."', '".$data['nik']."', '".$data['username']."', '".$data['password']."', '".$data['email']."', '".$data['phone']."', '".$data['user_role']."', now())";
+        function addDataAnimal ($data) {
+            $sql    =   "INSERT INTO {$this->tableName} (name, description, date_created)
+                            VALUES('".ucwords($data['name'])."', '".$data['description']."', now())";
             
             $query  =   $this->db->query($sql);
 
@@ -46,25 +46,19 @@
             }
         }
 
-        function getDataUser ($filter = NULL, $filter_key = NULL, $limit = NULL, $field_target = NULL) {
+        function getDataAnimal ($filter = NULL, $filter_key = NULL, $limit = NULL, $field_target = NULL) {
             if(!empty($filter) && !empty($filter_key)) {
                 if($filter === 'id') {
                     if(is_array($limit)) {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE user_id='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE animal_id='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
                     } else {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE user_id='".$filter_key."'";
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE animal_id='".$filter_key."'";
                     }
                 } elseif ($filter === 'search') {
                     if(is_array($limit)) {
                         $sql    =   "SELECT * FROM {$this->tableName} WHERE ".$field_target." LIKE '%".$filter_key."%' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
                     } else {
                         $sql    =   "SELECT * FROM {$this->tableName} WHERE ".$field_target." LIKE '%".$filter_key."%'";
-                    }
-                } elseif ($filter === 'username') {
-                    if(is_array($limit)) {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE username='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
-                    } else {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE username='".$filter_key."'";
                     }
                 } elseif ($filter === 'create_sql') {
                     if(is_array($limit)) {
@@ -91,15 +85,10 @@
             }
         }
 
-        function updateDataUser($data, $findBy = 'user_id', $findByValue = '') {
-            $name = "name='".$data['name']."'";
-            $nik = "nik='".$data['nik']."'";
-            $username = "username='".$data['username']."'";
-            $password = "password='".$data['password']."'";
-            $email = "email='".$data['email']."'";
-            $phone = "phone='".$data['phone']."'";
-            $user_role = "user_role='".$data['user_role']."'";
-            $assign_task = "assign_task='".$data['assign_task']."'";
+        function updateDataAnimal($data, $findBy = '', $findByValue = '') {
+            $name = "name='".ucwords($data['name'])."'";
+            $description = "description='".$data['description']."'";
+            $findBy = 'animal_id';
 
             $query = [];
             foreach ($data as $key => $value) {
@@ -128,7 +117,7 @@
             }
         }
 
-        function deleteDataUser($field_name, $field_value) {
+        function deleteDataAnimal($field_name, $field_value) {
             $sql    =   "DELETE FROM {$this->tableName} WHERE ".$field_name." = '".$field_value."'";
             
             $query  =   $this->db->query($sql);

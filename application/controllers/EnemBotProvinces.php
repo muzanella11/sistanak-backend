@@ -56,6 +56,11 @@ class EnemBotProvinces extends RestManager {
         
         $data = $this->CrudManagement->run($config, $dataModel);
 
+        if ($data['status'] === 'Problem')
+        {
+            $flag = 1;
+        }
+
         return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
     }
 
@@ -87,6 +92,11 @@ class EnemBotProvinces extends RestManager {
         ];
         
         $data = $this->CrudManagement->run($config, $dataModel);
+
+        if ($data['status'] === 'Problem')
+        {
+            $flag = 1;
+        }
 
         return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
     }
@@ -120,6 +130,11 @@ class EnemBotProvinces extends RestManager {
         
         $data = $this->CrudManagement->run($config, $dataModel);
 
+        if ($data['status'] === 'Problem')
+        {
+            $flag = 1;
+        }
+
         return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
     }
 
@@ -139,6 +154,11 @@ class EnemBotProvinces extends RestManager {
         ];
         
         $data = $this->CrudManagement->run($config, $dataModel);
+
+        if ($data['status'] === 'Problem')
+        {
+            $flag = 1;
+        }
 
         return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
     }

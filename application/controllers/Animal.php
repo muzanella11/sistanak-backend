@@ -5,28 +5,30 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH . '/libraries/RestManager.php';
 require APPPATH . '/libraries/CrudManagement.php';
 
-class EnemBotRole extends RestManager {
+class Animal extends RestManager {
+    private $className = 'Animal';
+    private $modelName = 'AnimalModel';
+
     function __construct () 
     {
         // Construct the parent class
         parent::__construct();
-        $this->load->model('enem_user_model');
         $this->CrudManagement = new CrudManagement();
     }
 
-    public function superadmin_get()
+    public function index_get()
     {
         $queryString = $this->input->get(); // Query String for filter data :)
 
         $config = [
-            'catIdSegment' => 3,
-            'isEditOrDeleteSegment' => 4
+            'catIdSegment' => 2,
+            'isEditOrDeleteSegment' => 3
         ];
 
         $dataModel = [
             [
-                'className' => 'Role',
-                'modelName' => 'RoleModel',
+                'className' => $this->className,
+                'modelName' => $this->modelName,
                 'filter' => '',
                 'filterKey' => '',
                 'limit' => [
@@ -48,7 +50,7 @@ class EnemBotRole extends RestManager {
             }
 
             $dataModel[0]['filter'] = 'create_sql';
-            $dataModel[0]['filterKey'] = 'name like "%'.$queryString['q'].'%" or user_role like "%'.$queryString['status_role'].'%"';
+            $dataModel[0]['filterKey'] = 'name like "%'.$queryString['q'].'%" or animal_id like "%'.$queryString['animal'].'%"';
             $dataModel[0]['fieldTarget'] = null;
         }
         
@@ -62,20 +64,20 @@ class EnemBotRole extends RestManager {
         return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
     }
 
-    public function superadmin_post()
+    public function index_post()
     {
         $name = $this->post('name');
-        $status_role = $this->post('status_role');
+        $description = $this->post('description');
 
         $config = [
-            'catIdSegment' => 3,
-            'isEditOrDeleteSegment' => 4
+            'catIdSegment' => 2,
+            'isEditOrDeleteSegment' => 3
         ];
 
         $dataModel = [
             [
-                'className' => 'Role',
-                'modelName' => 'RoleModel',
+                'className' => $this->className,
+                'modelName' => $this->modelName,
                 'filter' => '',
                 'filterKey' => '',
                 'limit' => [
@@ -84,7 +86,7 @@ class EnemBotRole extends RestManager {
                 ],
                 'dataMaster' => [
                     'name' => $name,
-                    'status_role' => $status_role
+                    'description' => $description
                 ]
             ]
         ];
@@ -99,20 +101,20 @@ class EnemBotRole extends RestManager {
         return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
     }
 
-    public function superadmin_put()
+    public function index_put()
     {
         $name = $this->put('name');
-        $status_role = $this->put('status_role');
+        $description = $this->put('description');
 
         $config = [
-            'catIdSegment' => 3,
-            'isEditOrDeleteSegment' => 4
+            'catIdSegment' => 2,
+            'isEditOrDeleteSegment' => 3
         ];
 
         $dataModel = [
             [
-                'className' => 'Role',
-                'modelName' => 'RoleModel',
+                'className' => $this->className,
+                'modelName' => $this->modelName,
                 'filter' => '',
                 'filterKey' => '',
                 'limit' => [
@@ -121,7 +123,7 @@ class EnemBotRole extends RestManager {
                 ],
                 'dataMaster' => [
                     'name' => $name,
-                    'status_role' => $status_role
+                    'description' => $description
                 ]
             ]
         ];
@@ -136,18 +138,18 @@ class EnemBotRole extends RestManager {
         return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
     }
 
-    public function superadmin_delete()
+    public function index_delete()
     {
         $config = [
-            'catIdSegment' => 3,
-            'isEditOrDeleteSegment' => 4
+            'catIdSegment' => 2,
+            'isEditOrDeleteSegment' => 3
         ];
 
         $dataModel = [
             [
-                'className' => 'Role',
-                'modelName' => 'RoleModel',
-                'fieldName' => 'role_id'
+                'className' => $this->className,
+                'modelName' => $this->modelName,
+                'fieldName' => 'animal_id'
             ]
         ];
         
@@ -159,15 +161,5 @@ class EnemBotRole extends RestManager {
         }
 
         return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
-    }
-
-    public function index_post() 
-    {
-        $data = [
-            'status' => 'Ok',
-            'messages' => 'Hello guys post :)'
-        ];
-        
-        return $this->set_response($data, REST_Controller::HTTP_OK);
     }
 }
