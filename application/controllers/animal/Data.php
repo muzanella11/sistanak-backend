@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH . '/libraries/RestManager.php';
 require APPPATH . '/libraries/CrudManagement.php';
 
-class Animal extends RestManager {
+class Data extends RestManager {
     private $className = 'Animal';
     private $modelName = 'AnimalModel';
 
@@ -21,8 +21,8 @@ class Animal extends RestManager {
         $queryString = $this->input->get(); // Query String for filter data :)
 
         $config = [
-            'catIdSegment' => 2,
-            'isEditOrDeleteSegment' => 3
+            'catIdSegment' => 3,
+            'isEditOrDeleteSegment' => 4
         ];
 
         $dataModel = [
@@ -70,8 +70,8 @@ class Animal extends RestManager {
         $description = $this->post('description');
 
         $config = [
-            'catIdSegment' => 2,
-            'isEditOrDeleteSegment' => 3
+            'catIdSegment' => 3,
+            'isEditOrDeleteSegment' => 4
         ];
 
         $dataModel = [
@@ -107,8 +107,8 @@ class Animal extends RestManager {
         $description = $this->put('description');
 
         $config = [
-            'catIdSegment' => 2,
-            'isEditOrDeleteSegment' => 3
+            'catIdSegment' => 3,
+            'isEditOrDeleteSegment' => 4
         ];
 
         $dataModel = [
@@ -141,8 +141,8 @@ class Animal extends RestManager {
     public function index_delete()
     {
         $config = [
-            'catIdSegment' => 2,
-            'isEditOrDeleteSegment' => 3
+            'catIdSegment' => 3,
+            'isEditOrDeleteSegment' => 4
         ];
 
         $dataModel = [
