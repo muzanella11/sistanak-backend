@@ -50,11 +50,17 @@
 
         function getDataAnimalOwnershipDetail ($filter = NULL, $filter_key = NULL, $limit = NULL, $field_target = NULL) {
             if(!empty($filter) && !empty($filter_key)) {
-                if($filter === 'id') {
+                if($filter === 'ownership_id') {
                     if(is_array($limit)) {
                         $sql    =   "SELECT * FROM {$this->tableName} WHERE ownership_id='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
                     } else {
                         $sql    =   "SELECT * FROM {$this->tableName} WHERE ownership_id='".$filter_key."'";
+                    }
+                } elseif($filter === 'ownership_detail_id') {
+                    if(is_array($limit)) {
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE ownership_detail_id='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
+                    } else {
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE ownership_detail_id='".$filter_key."'";
                     }
                 } elseif ($filter === 'search') {
                     if(is_array($limit)) {

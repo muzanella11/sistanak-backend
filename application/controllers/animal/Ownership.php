@@ -56,6 +56,36 @@ class Ownership extends RestManager {
         
         $data = $this->CrudManagement->run($config, $dataModel);
 
+        // Get data ownership detail
+        $dataModelOwnerDetail = [
+            [
+                'className' => 'AnimalOwnershipDetail',
+                'modelName' => 'AnimalOwnershipDetailModel',
+                'filter' => 'ownership_id',
+                'filterKey' => '',
+                'limit' => [
+                    'startLimit' => 0,
+                    'limitData' => 10000
+                ],
+                'fieldTarget' => 'name',
+                'dataMaster' => []
+            ]
+        ];
+
+        foreach ($data['data'] as $key => $value) {
+            if ($value->ownership_id)
+            {
+                $dataModelOwnerDetail[0]['filterKey'] = $value->ownership_id;
+                $dataOwnerDetail = $this->CrudManagement->run($config, $dataModelOwnerDetail);
+                
+                $dataMaster = json_encode($data['data'][$key]);
+                $dataMasterEncode = json_decode($dataMaster, TRUE);
+                $dataMasterEncode['animal_list'] = $dataOwnerDetail['data'];
+                $dataMasterResult = $dataMasterEncode;
+                $data['data'][$key] = $dataMasterResult;
+            }
+        }
+
         if ($data['status'] === 'Problem')
         {
             $flag = 1;
