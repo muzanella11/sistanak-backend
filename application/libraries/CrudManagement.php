@@ -132,7 +132,7 @@ class CrudManagement {
                 {
                     $newModel = [];
                     foreach ($model as $key => $value) {
-                        $value['filter'] = 'id';
+                        $value['filter'] = $value['filter'] ? $value['filter'] : 'id';
                         $value['filterKey'] = $getCatOrId;
                         array_push($newModel, $value);
                     }

@@ -199,6 +199,7 @@ class Ownership extends RestManager {
         $village_id = $this->put('village_id');
         $address = $this->put('address');
         $birth_date = $this->put('birth_date');
+        $animal_list = $this->post('animal_list');
 
         $config = [
             'catIdSegment' => 3,
@@ -261,15 +262,18 @@ class Ownership extends RestManager {
                         ]
                     ];
 
+                    // Set ownership_id animal list
                     foreach ($animal_list as $key => $value) {
-                        $dataModelDetail[0]['dataMaster'] = $value;
-                    }
+                        if ($value->ownership_detail_id)
+                        {
+                            $config['catIdSegment'] = $value->ownership_detail_id;
+                            $data = $this->CrudManagement->run($config, $dataModelDetail);
 
-                    $data = $this->CrudManagement->run($config, $dataModelDetail);
-
-                    if ($data['status'] === 'Problem')
-                    {
-                        $flag = 1;
+                            if ($data['status'] === 'Problem')
+                            {
+                                $flag = 1;
+                            }
+                        }
                     }
                 }
             }

@@ -56,7 +56,7 @@
                     } else {
                         $sql    =   "SELECT * FROM {$this->tableName} WHERE ownership_id='".$filter_key."'";
                     }
-                } elseif($filter === 'ownership_detail_id') {
+                } elseif($filter === 'id') {
                     if(is_array($limit)) {
                         $sql    =   "SELECT * FROM {$this->tableName} WHERE ownership_detail_id='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
                     } else {
