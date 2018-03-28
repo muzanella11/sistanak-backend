@@ -9,16 +9,16 @@
 
 ?>
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-    class RegenciesModel extends MY_Model {
-        private $tableName = 'enem_ids_regencies';
+    class AnimalOwnershipDetailModel extends MY_Model {
+        private $tableName = 'enem_animals_ownership_detail';
 
         function __construct(){
             parent::__construct();
         }
 
-        function addDataRegencies ($data) {
-            $sql    =   "INSERT INTO {$this->tableName} (name, province_id, regencies_id)
-                            VALUES('".strtoupper($data['name'])."', '".$data['province_id']."', '".$data['regencies_id']."')";
+        function addDataAnimalOwnershipDetail ($data) {
+            $sql    =   "INSERT INTO {$this->tableName} (ownership_id, animal_id, group_id, gender_id, amount, date_created)
+                            VALUES('".ucwords($data['ownership_id'])."', '".$data['animal_id']."', '".$data['group_id']."', '".$data['gender_id']."', '".$data['amount']."', now())";
             
             $query  =   $this->db->query($sql);
             $latestId = $this->db->insert_id();
@@ -48,25 +48,19 @@
             }
         }
 
-        function getDataRegencies ($filter = NULL, $filter_key = NULL, $limit = NULL, $field_target = NULL) {
+        function getDataAnimalOwnershipDetail ($filter = NULL, $filter_key = NULL, $limit = NULL, $field_target = NULL) {
             if(!empty($filter) && !empty($filter_key)) {
                 if($filter === 'id') {
                     if(is_array($limit)) {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE regencies_id='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE ownership_id='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
                     } else {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE regencies_id='".$filter_key."'";
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE ownership_id='".$filter_key."'";
                     }
                 } elseif ($filter === 'search') {
                     if(is_array($limit)) {
                         $sql    =   "SELECT * FROM {$this->tableName} WHERE ".$field_target." LIKE '%".$filter_key."%' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
                     } else {
                         $sql    =   "SELECT * FROM {$this->tableName} WHERE ".$field_target." LIKE '%".$filter_key."%'";
-                    }
-                } elseif ($filter === 'name') {
-                    if(is_array($limit)) {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE name='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
-                    } else {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE name='".$filter_key."'";
                     }
                 } elseif ($filter === 'create_sql') {
                     if(is_array($limit)) {
@@ -93,10 +87,13 @@
             }
         }
 
-        function updateDataRegencies($data, $findBy = '', $findByValue = '') {
-            $name = "name='".strtoupper($data['name'])."'";
-            $regencies_id = "regencies_id='".$data['regencies_id']."'";
-            $findBy = 'regencies_id';
+        function updateDataAnimalOwnershipDetail ($data, $findBy = '', $findByValue = '') {
+            $ownership_id = "ownership_id='".ucwords($data['ownership_id'])."'";
+            $animal_id = "animal_id='".$data['animal_id']."'";
+            $group_id = "group_id='".$data['group_id']."'";
+            $gender_id = "gender_id='".$data['gender_id']."'";
+            $amount = "amount='".$data['amount']."'";
+            $findBy = 'ownership_detail_id';
 
             $query = [];
             foreach ($data as $key => $value) {
@@ -114,8 +111,8 @@
                     'messages' => 'Gagal mengubah data'
                 ];
             }
-            
-            $sql    =   "UPDATE {$this->tableName} SET ".$queryResult." WHERE ".$findBy."='".$findByValue."'";
+
+            $sql    =   "UPDATE {$this->tableName} SET ".$queryResult.", date_update=now() WHERE ".$findBy."='".$findByValue."'";
             
             $query  =   $this->db->query($sql);
             $getError = $this->db->error();
@@ -133,7 +130,7 @@
             }
         }
 
-        function deleteDataRegencies($field_name, $field_value) {
+        function deleteDataAnimalOwnershipDetail ($field_name, $field_value) {
             $sql    =   "DELETE FROM {$this->tableName} WHERE ".$field_name." = '".$field_value."'";
             
             $query  =   $this->db->query($sql);

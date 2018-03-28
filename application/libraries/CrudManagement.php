@@ -61,6 +61,7 @@ class CrudManagement {
                 $data = [
                     'status' => 'Ok',
                     'messages' => 'Berhasil Membuat Data',
+                    'latest_created' => $dataModel['latest_id'],
                     'data' => [
                         'getCatOrId' => $getCatOrId
                     ]
@@ -199,6 +200,7 @@ class CrudManagement {
                 {
                     $data = $this->CI->{$value['modelName']}->{$value['methodName']}($value['dataMaster']);
                     $flag = $data['flag'];
+                    $latestId = $data['latest_create_id'];
                 }
                 else if ($isEditOrDelete === 'edit')
                 {
@@ -227,6 +229,11 @@ class CrudManagement {
                 'status' => 'Ok',
                 'messages' => 'Berhasil'
             ];
+
+            if (isset($latestId))
+            {
+                $data['latest_id'] = $latestId;
+            }
         }
         else
         {

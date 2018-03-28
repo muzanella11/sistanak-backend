@@ -9,16 +9,16 @@
 
 ?>
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-    class RegenciesModel extends MY_Model {
-        private $tableName = 'enem_ids_regencies';
+    class AnimalOwnershipModel extends MY_Model {
+        private $tableName = 'enem_animals_ownership';
 
         function __construct(){
             parent::__construct();
         }
 
-        function addDataRegencies ($data) {
-            $sql    =   "INSERT INTO {$this->tableName} (name, province_id, regencies_id)
-                            VALUES('".strtoupper($data['name'])."', '".$data['province_id']."', '".$data['regencies_id']."')";
+        function addDataAnimalOwnership ($data) {
+            $sql    =   "INSERT INTO {$this->tableName} (fullname, identity_number, identity_type, phone, province_id, region_id, village_id, address, birth_date, date_created)
+                            VALUES('".ucwords($data['fullname'])."', '".$data['identity_number']."', '".$data['identity_type']."', '".$data['phone']."', '".$data['province_id']."', '".$data['region_id']."', '".$data['village_id']."', '".$data['address']."', '".$data['birth_date']."', now())";
             
             $query  =   $this->db->query($sql);
             $latestId = $this->db->insert_id();
@@ -48,25 +48,19 @@
             }
         }
 
-        function getDataRegencies ($filter = NULL, $filter_key = NULL, $limit = NULL, $field_target = NULL) {
+        function getDataAnimalOwnership ($filter = NULL, $filter_key = NULL, $limit = NULL, $field_target = NULL) {
             if(!empty($filter) && !empty($filter_key)) {
                 if($filter === 'id') {
                     if(is_array($limit)) {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE regencies_id='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE ownership_id='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
                     } else {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE regencies_id='".$filter_key."'";
+                        $sql    =   "SELECT * FROM {$this->tableName} WHERE ownership_id='".$filter_key."'";
                     }
                 } elseif ($filter === 'search') {
                     if(is_array($limit)) {
                         $sql    =   "SELECT * FROM {$this->tableName} WHERE ".$field_target." LIKE '%".$filter_key."%' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
                     } else {
                         $sql    =   "SELECT * FROM {$this->tableName} WHERE ".$field_target." LIKE '%".$filter_key."%'";
-                    }
-                } elseif ($filter === 'name') {
-                    if(is_array($limit)) {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE name='".$filter_key."' LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
-                    } else {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE name='".$filter_key."'";
                     }
                 } elseif ($filter === 'create_sql') {
                     if(is_array($limit)) {
@@ -93,10 +87,17 @@
             }
         }
 
-        function updateDataRegencies($data, $findBy = '', $findByValue = '') {
-            $name = "name='".strtoupper($data['name'])."'";
-            $regencies_id = "regencies_id='".$data['regencies_id']."'";
-            $findBy = 'regencies_id';
+        function updateDataAnimalOwnership ($data, $findBy = '', $findByValue = '') {
+            $fullname = "fullname='".ucwords($data['fullname'])."'";
+            $identity_number = "identity_number='".$data['identity_number']."'";
+            $identity_type = "identity_type='".$data['identity_type']."'";
+            $phone = "phone='".$data['phone']."'";
+            $province_id = "province_id='".$data['province_id']."'";
+            $region_id = "region_id='".$data['region_id']."'";
+            $village_id = "village_id='".$data['village_id']."'";
+            $address = "address='".$data['address']."'";
+            $birth_date = "birth_date='".$data['birth_date']."'";
+            $findBy = 'ownership_id';
 
             $query = [];
             foreach ($data as $key => $value) {
@@ -114,8 +115,8 @@
                     'messages' => 'Gagal mengubah data'
                 ];
             }
-            
-            $sql    =   "UPDATE {$this->tableName} SET ".$queryResult." WHERE ".$findBy."='".$findByValue."'";
+
+            $sql    =   "UPDATE {$this->tableName} SET ".$queryResult.", date_update=now() WHERE ".$findBy."='".$findByValue."'";
             
             $query  =   $this->db->query($sql);
             $getError = $this->db->error();
@@ -133,7 +134,7 @@
             }
         }
 
-        function deleteDataRegencies($field_name, $field_value) {
+        function deleteDataAnimalOwnership ($field_name, $field_value) {
             $sql    =   "DELETE FROM {$this->tableName} WHERE ".$field_name." = '".$field_value."'";
             
             $query  =   $this->db->query($sql);

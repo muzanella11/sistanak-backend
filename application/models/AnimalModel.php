@@ -21,6 +21,7 @@
                             VALUES('".ucwords($data['name'])."', '".$data['description']."', now())";
             
             $query  =   $this->db->query($sql);
+            $latestId = $this->db->insert_id();
 
             if ($this->db->trans_status() === FALSE)
             {
@@ -35,6 +36,7 @@
 
             if (!$getError['message']) {
                 return [
+                    'latest_create_id' => $latestId,
                     'flag' => 0,
                     'messages' => 'Berhasil menambahkan data'
                 ];
@@ -92,12 +94,20 @@
 
             $query = [];
             foreach ($data as $key => $value) {
-                if ($value) {
+                if (isset(${$key}) && $value) {
                     array_push($query, ${$key});
                 }
             }
 
             $queryResult = implode(',', $query);
+
+            if (!$queryResult)
+            {
+                return [
+                    'flag' => 1,
+                    'messages' => 'Gagal mengubah data'
+                ];
+            }
 
             $sql    =   "UPDATE {$this->tableName} SET ".$queryResult.", date_update=now() WHERE ".$findBy."='".$findByValue."'";
             
