@@ -18,7 +18,7 @@
 
         function addDataAnimalOwnershipDetail ($data) {
             $sql    =   "INSERT INTO {$this->tableName} (ownership_id, animal_id, group_id, gender_id, amount, date_created)
-                            VALUES('".ucwords($data['ownership_id'])."', '".$data['animal_id']."', '".$data['group_id']."', '".$data['gender_id']."', '".$data['amount']."', now())";
+                            VALUES('".$data['ownership_id']."', '".$data['animal_id']."', '".$data['group_id']."', '".$data['gender_id']."', '".$data['amount']."', now())";
             
             $query  =   $this->db->query($sql);
             $latestId = $this->db->insert_id();

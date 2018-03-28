@@ -107,6 +107,7 @@ class Ownership extends RestManager {
         ];
         
         $data = $this->CrudManagement->run($config, $dataModel);
+        $latestIdOwnership = $data['latest_created'];
 
         if ($data['status'] === 'Problem')
         {
@@ -114,7 +115,7 @@ class Ownership extends RestManager {
         }
         else 
         {
-            if (count($animal_list) > 0)
+            if (count($animal_list) > 0 && $latestIdOwnership)
             {
                 $dataModelDetail = [
                     [
@@ -130,16 +131,27 @@ class Ownership extends RestManager {
                     ]
                 ];
 
+                // Set ownership_id animal list
+                $index = 0;
+                foreach ($animal_list as $key => $value) {
+                    $animal_list[$index]['ownership_id'] = $latestIdOwnership;
+                    $index++;
+                }
+
+                // Add animal detail ownership
                 foreach ($animal_list as $key => $value) {
                     $dataModelDetail[0]['dataMaster'] = $value;
+
+                    $data = $this->CrudManagement->run($config, $dataModelDetail);
+
+                    if ($data['status'] === 'Problem')
+                    {
+                        $flag = 1;
+                    }
                 }
 
-                $data = $this->CrudManagement->run($config, $dataModelDetail);
-
-                if ($data['status'] === 'Problem')
-                {
-                    $flag = 1;
-                }
+                // Set data ownership
+                $data['latest_created'] = $latestIdOwnership;
             }
         }
 
