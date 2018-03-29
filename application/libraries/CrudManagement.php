@@ -139,10 +139,10 @@ class CrudManagement {
                     $newModel = [];
                     foreach ($model as $key => $value) {
                         $value['filter'] = $value['filter'] ? $value['filter'] : 'id';
-                        $value['filterKey'] = $getCatOrId;
+                        $value['filterKey'] = $value['filterKey'] ? $value['filterKey'] : $getCatOrId;
                         array_push($newModel, $value);
                     }
-
+                    
                     $dataMaster = $this->runModelGet($newModel, $getCatOrId); // read data by id
                     $data = [
                         'status' => 'Ok',

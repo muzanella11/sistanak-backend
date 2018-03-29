@@ -50,7 +50,7 @@ class OwnershipDetail extends RestManager {
             }
 
             $dataModel[0]['filter'] = 'create_sql';
-            $dataModel[0]['filterKey'] = 'ownership_id like "%'.$queryString['ownership'].'%"';
+            $dataModel[0]['filterKey'] = "ownership_id={$queryString['ownership']}";
             $dataModel[0]['fieldTarget'] = null;
         }
         
