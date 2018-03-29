@@ -35,9 +35,15 @@ class CrudManagement {
 
         $catIdSegment = $config['catIdSegment'] ? $config['catIdSegment'] : 2;
         $isEditOrDeleteSegment = $config['isEditOrDeleteSegment'] ? $config['isEditOrDeleteSegment'] : 3;
-
+        
         $getCatOrId = strtolower($this->CI->uri->segment($catIdSegment));
         $isEditOrDelete = strtolower($this->CI->uri->segment($isEditOrDeleteSegment));
+
+        if (isset($config['customParam']))
+        {
+            $getCatOrId = $config['catIdSegment'];
+            $isEditOrDelete = $config['isEditOrDeleteSegment'];
+        }
         
         $flag = 0;
         $data = [
@@ -128,7 +134,7 @@ class CrudManagement {
                     }
 
                 }
-                elseif (is_numeric($getCatOrId))
+                elseif (is_numeric($getCatOrId) && $isEditOrDelete !== 'edit' || $isEditOrDelete !== 'delete')
                 {
                     $newModel = [];
                     foreach ($model as $key => $value) {

@@ -35,7 +35,7 @@ class Ownership extends RestManager {
                     'startLimit' => 0,
                     'limitData' => 10000
                 ],
-                'fieldTarget' => 'name',
+                'fieldTarget' => 'fullname',
                 'queryString' => $queryString,
                 'dataMaster' => []
             ]
@@ -199,7 +199,7 @@ class Ownership extends RestManager {
         $village_id = $this->put('village_id');
         $address = $this->put('address');
         $birth_date = $this->put('birth_date');
-        $animal_list = $this->post('animal_list');
+        $animal_list = $this->put('animal_list');
 
         $config = [
             'catIdSegment' => 3,
@@ -238,42 +238,48 @@ class Ownership extends RestManager {
         }
         else
         {
-            $data = $this->CrudManagement->run($config, $dataModel);
-
-            if ($data['status'] === 'Problem')
+            if (count($animal_list) > 0)
             {
-                $flag = 1;
-            }
-            else 
-            {
-                if (count($animal_list) > 0)
-                {
-                    $dataModelDetail = [
-                        [
-                            'className' => 'AnimalOwnershipDetail',
-                            'modelName' => 'AnimalOwnershipDetailModel',
-                            'filter' => '',
-                            'filterKey' => '',
-                            'limit' => [
-                                'startLimit' => 0,
-                                'limitData' => 10000
-                            ],
-                            'dataMaster' => []
-                        ]
-                    ];
+                $dataModelDetail = [
+                    [
+                        'className' => 'AnimalOwnershipDetail',
+                        'modelName' => 'AnimalOwnershipDetailModel',
+                        'filter' => '',
+                        'filterKey' => '',
+                        'limit' => [
+                            'startLimit' => 0,
+                            'limitData' => 10000
+                        ],
+                        'dataMaster' => []
+                    ]
+                ];
 
-                    // Set ownership_id animal list
-                    foreach ($animal_list as $key => $value) {
-                        if ($value->ownership_detail_id)
-                        {
-                            $config['catIdSegment'] = $value->ownership_detail_id;
-                            $data = $this->CrudManagement->run($config, $dataModelDetail);
+                // Add animal detail ownership
+                foreach ($animal_list as $key => $value) {
+                    if (!isset($value['ownership_detail_id']))
+                    {
+                        $config = [
+                            'catIdSegment' => 'create',
+                            'isEditOrDeleteSegment' => null,
+                            'customParam' => true
+                        ];
+                    }
+                    else 
+                    {
+                        $config = [
+                            'catIdSegment' => (int) $value['ownership_detail_id'],
+                            'isEditOrDeleteSegment' => 'edit',
+                            'customParam' => true
+                        ];
+                    }
 
-                            if ($data['status'] === 'Problem')
-                            {
-                                $flag = 1;
-                            }
-                        }
+                    $dataModelDetail[0]['dataMaster'] = $value;
+
+                    $data = $this->CrudManagement->run($config, $dataModelDetail);
+
+                    if ($data['status'] === 'Problem')
+                    {
+                        $flag = 1;
                     }
                 }
             }
