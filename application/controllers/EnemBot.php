@@ -6,6 +6,9 @@ require APPPATH . '/libraries/RestManager.php';
 require APPPATH . '/libraries/UserManagement.php';
 require APPPATH . '/libraries/CrudManagement.php';
 
+use Carbon\Carbon;
+use Mpdf\Mpdf;
+
 class EnemBot extends RestManager {
 
     function __construct()
@@ -16,6 +19,25 @@ class EnemBot extends RestManager {
         $this->load->model('enem_user_model');
         $this->UserManagement = new UserManagement();
         $this->CrudManagement = new CrudManagement();
+        $this->Mpdf = new \Mpdf\Mpdf();
+        $this->Carbon = new \Carbon\Carbon();
+    }
+
+    public function botmpdf_get()
+    {
+        // var_dump($this->Carbon->now());exit;
+        $this->Mpdf->WriteHTML('<h1>Hello world!</h1>');
+        $this->Mpdf->Output();
+        // var_dump(Carbon::now());exit;
+        // Mpdf::WriteHTML('<h1>Hello world!</h1>');
+        // Mpdf::Output();
+        $data = [
+            'status' => 'Ok',
+            'messages' => 'Hello guys :)',
+            'data' => []
+        ];
+        
+        return $this->set_response($data, REST_Controller::HTTP_OK);
     }
 
     public function getdatauser_get()

@@ -12,5 +12,9 @@
 	"license": "MIT",
 	"support": {
 		"source": "https://github.com/chriskacerguis/codeigniter-restserver"
+	},
+	"require": {
+		"mpdf/mpdf": "^7.0",
+		"nesbot/carbon": "^1.25"
 	}
 }
