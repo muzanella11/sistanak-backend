@@ -5,6 +5,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH . '/libraries/RestManager.php';
 require APPPATH . '/libraries/UserManagement.php';
 require APPPATH . '/libraries/CrudManagement.php';
+require APPPATH . '/libraries/Chart/ChartArea.php';
+require APPPATH . '/libraries/Chart/ChartBar.php';
 
 use Carbon\Carbon;
 use Mpdf\Mpdf;
@@ -21,16 +23,51 @@ class EnemBot extends RestManager {
         $this->CrudManagement = new CrudManagement();
         $this->Mpdf = new \Mpdf\Mpdf();
         $this->Carbon = new \Carbon\Carbon();
+        $this->ChartArea = new ChartArea();
+        $this->ChartBar = new ChartBar();
     }
 
     public function botmpdf_get()
     {
-        // var_dump($this->Carbon->now());exit;
         $this->Mpdf->WriteHTML('<h1>Hello world!</h1>');
         $this->Mpdf->Output();
         // var_dump(Carbon::now());exit;
         // Mpdf::WriteHTML('<h1>Hello world!</h1>');
         // Mpdf::Output();
+        $data = [
+            'status' => 'Ok',
+            'messages' => 'Hello guys :)',
+            'data' => []
+        ];
+        
+        return $this->set_response($data, REST_Controller::HTTP_OK);
+    }
+
+    public function botchart_get()
+    {
+        $queryString = $this->get();
+        $chart = '';
+        if (isset($queryString['q']))
+        {
+            if ($queryString['q'] === 'area')
+            {
+                $chart = $this->ChartArea->renderChart();
+            }
+            else if ($queryString['q'] === 'bar')
+            {
+                $chart = $this->ChartBar->renderChart();
+            }
+            else
+            {
+                $chart = $this->ChartArea->renderChart();
+            }
+        }
+        else
+        {
+            $chart = $this->ChartArea->renderChart();
+        }
+
+        var_dump($chart);exit;
         $data = [
             'status' => 'Ok',
             'messages' => 'Hello guys :)',

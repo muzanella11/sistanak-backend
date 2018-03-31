@@ -15,6 +15,7 @@
 	},
 	"require": {
 		"mpdf/mpdf": "^7.0",
-		"nesbot/carbon": "^1.25"
+		"nesbot/carbon": "^1.25",
+		"szymach/c-pchart": "^3.0"
 	}
 }
