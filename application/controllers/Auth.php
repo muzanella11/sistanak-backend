@@ -153,6 +153,7 @@ class Auth extends RestManager {
             $data['status'] = 'Ok';
             $data['messages'] = 'Success';
             $data['token'] = $this->getNewToken();
+            $data['data_user'] = $dataUser[0];
         }
 
         return $this->response($data, $flag === 0 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
