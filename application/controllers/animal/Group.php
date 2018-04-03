@@ -33,8 +33,8 @@ class Group extends RestManager {
                 'filter' => '',
                 'filterKey' => '',
                 'limit' => [
-                    'startLimit' => 0,
-                    'limitData' => 10000
+                    'startLimit' => isset($queryString['offset']) ? $queryString['offset'] : 0,
+                    'limitData' => isset($queryString['limit']) ? $queryString['limit'] : 10000
                 ],
                 'fieldTarget' => 'name',
                 'queryString' => $queryString,
@@ -51,7 +51,7 @@ class Group extends RestManager {
             }
 
             $dataModel[0]['filter'] = 'create_sql';
-            $dataModel[0]['filterKey'] = 'name like "%'.$queryString['q'].'%" or animals_group_id like "%'.$queryString['animal_group'].'%"';
+            $dataModel[0]['filterKey'] = $queryString['q'] !== 'null' ? 'WHERE name like "%'.$queryString['q'].'%" or animals_group_id like "%'.$queryString['q'].'%"' : null;
             $dataModel[0]['fieldTarget'] = null;
         }
         

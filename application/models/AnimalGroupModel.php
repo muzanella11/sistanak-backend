@@ -17,8 +17,8 @@
         }
 
         function addDataAnimalGroup ($data) {
-            $sql    =   "INSERT INTO {$this->tableName} (name, date_created)
-                            VALUES('".ucwords($data['name'])."', now())";
+            $sql    =   "INSERT INTO {$this->tableName} (name, description, date_created)
+                            VALUES('".ucwords($data['name'])."', '".$data['description']."', now())";
             
             $query  =   $this->db->query($sql);
             $latestId = $this->db->insert_id();
@@ -64,9 +64,9 @@
                     }
                 } elseif ($filter === 'create_sql') {
                     if(is_array($limit)) {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE ".$filter_key." LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
+                        $sql    =   "SELECT * FROM {$this->tableName} ".$filter_key." LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
                     } else {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE ".$filter_key."";
+                        $sql    =   "SELECT * FROM {$this->tableName} ".$filter_key."";
                     }
                 }
             } else {
@@ -89,6 +89,8 @@
 
         function updateDataAnimalGroup ($data, $findBy = '', $findByValue = '') {
             $name = "name='".ucwords($data['name'])."'";
+            $description = "description='".$data['description']."'";
+            
             $findBy = 'animals_group_id';
 
             $query = [];
