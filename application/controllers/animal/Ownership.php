@@ -57,6 +57,14 @@ class Ownership extends RestManager {
         
         $data = $this->CrudManagement->run($config, $dataModel);
 
+        $dataModel[0]['filter'] = 0;
+        $dataModel[0]['filterKey'] = null;
+        $dataModel[0]['limit'] = null;
+
+        $getTotalData = $this->CrudManagement->run($config, $dataModel);
+
+        $data['totalData'] = count($getTotalData['data']);
+
         // Get data ownership detail
         $dataModelOwnerDetail = [
             [

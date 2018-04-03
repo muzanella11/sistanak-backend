@@ -33,8 +33,8 @@ class Data extends RestManager {
                 'filter' => '',
                 'filterKey' => '',
                 'limit' => [
-                    'startLimit' => 0,
-                    'limitData' => 10000
+                    'startLimit' => isset($queryString['offset']) ? $queryString['offset'] : 0,
+                    'limitData' => isset($queryString['limit']) ? $queryString['limit'] : 10000
                 ],
                 'fieldTarget' => 'name',
                 'queryString' => $queryString,
@@ -51,11 +51,19 @@ class Data extends RestManager {
             }
 
             $dataModel[0]['filter'] = 'create_sql';
-            $dataModel[0]['filterKey'] = 'name like "%'.$queryString['q'].'%" or animal_id like "%'.$queryString['animal'].'%"';
+            $dataModel[0]['filterKey'] = $queryString['q'] !== 'null' ? 'WHERE name like "%'.$queryString['q'].'%" or animal_id like "%'.$queryString['q'].'%"' : null;
             $dataModel[0]['fieldTarget'] = null;
         }
         
         $data = $this->CrudManagement->run($config, $dataModel);
+
+        $dataModel[0]['filter'] = 0;
+        $dataModel[0]['filterKey'] = null;
+        $dataModel[0]['limit'] = null;
+
+        $getTotalData = $this->CrudManagement->run($config, $dataModel);
+
+        $data['totalData'] = count($getTotalData['data']);
 
         if ($data['status'] === 'Problem')
         {
