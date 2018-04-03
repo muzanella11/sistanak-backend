@@ -59,7 +59,7 @@ class EnemBotRole extends RestManager {
             $flag = 1;
         }
 
-        return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
+        return $this->response($data, isset($flag) && $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
     }
 
     public function superadmin_post()
@@ -96,7 +96,7 @@ class EnemBotRole extends RestManager {
             $flag = 1;
         }
 
-        return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
+        return $this->response($data, isset($flag) && $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
     }
 
     public function superadmin_put()
@@ -133,7 +133,7 @@ class EnemBotRole extends RestManager {
             $flag = 1;
         }
 
-        return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
+        return $this->response($data, isset($flag) && $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
     }
 
     public function superadmin_delete()
@@ -158,7 +158,7 @@ class EnemBotRole extends RestManager {
             $flag = 1;
         }
 
-        return $this->response($data, $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
+        return $this->response($data, isset($flag) && $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
     }
 
     public function index_post() 
