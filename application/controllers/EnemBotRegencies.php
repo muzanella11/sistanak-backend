@@ -18,6 +18,7 @@ class EnemBotRegencies extends RestManager {
 
     public function superadmin_get()
     {
+        $flag = 0;
         $queryString = $this->input->get(); // Query String for filter data :)
 
         $config = [
@@ -66,6 +67,7 @@ class EnemBotRegencies extends RestManager {
 
     public function superadmin_post()
     {
+        $flag = 0;
         $name = $this->post('name');
         $provinces_id = $this->post('provinces_id');
 
@@ -103,6 +105,7 @@ class EnemBotRegencies extends RestManager {
 
     public function superadmin_put()
     {
+        $flag = 0;
         $name = $this->put('name');
         $provinces_id = $this->put('provinces_id');
 
@@ -140,6 +143,7 @@ class EnemBotRegencies extends RestManager {
 
     public function superadmin_delete()
     {
+        $flag = 0;
         $config = [
             'catIdSegment' => 3,
             'isEditOrDeleteSegment' => 4

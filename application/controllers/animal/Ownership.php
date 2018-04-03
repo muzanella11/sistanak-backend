@@ -18,6 +18,7 @@ class Ownership extends RestManager {
 
     public function index_get()
     {
+        $flag = 0;
         $queryString = $this->input->get(); // Query String for filter data :)
 
         $config = [
@@ -96,6 +97,7 @@ class Ownership extends RestManager {
 
     public function index_post()
     {
+        $flag = 0;
         $fullname = $this->post('fullname');
         $identity_number = $this->post('identity_number');
         $identity_type = $this->post('identity_type');
@@ -190,6 +192,7 @@ class Ownership extends RestManager {
 
     public function index_put()
     {
+        $flag = 0;
         $fullname = $this->put('fullname');
         $identity_number = $this->put('identity_number');
         $identity_type = $this->put('identity_type');
@@ -290,6 +293,7 @@ class Ownership extends RestManager {
 
     public function index_delete()
     {
+        $flag = 0;
         $config = [
             'catIdSegment' => 3,
             'isEditOrDeleteSegment' => 4

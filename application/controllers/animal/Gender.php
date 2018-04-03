@@ -18,6 +18,7 @@ class Gender extends RestManager {
 
     public function index_get()
     {
+        $flag = 0;
         $queryString = $this->input->get(); // Query String for filter data :)
 
         $config = [
@@ -66,6 +67,7 @@ class Gender extends RestManager {
 
     public function index_post()
     {
+        $flag = 0;
         $name = $this->post('name');
         $description = $this->post('description');
 
@@ -103,6 +105,7 @@ class Gender extends RestManager {
 
     public function index_put()
     {
+        $flag = 0;
         $name = $this->put('name');
         $description = $this->put('description');
 
@@ -140,6 +143,7 @@ class Gender extends RestManager {
 
     public function index_delete()
     {
+        $flag = 0;
         $config = [
             'catIdSegment' => 3,
             'isEditOrDeleteSegment' => 4

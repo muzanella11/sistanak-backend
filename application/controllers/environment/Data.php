@@ -18,6 +18,7 @@ class Data extends RestManager {
 
     public function index_get()
     {
+        $flag = 0;
         $queryString = $this->input->get(); // Query String for filter data :)
 
         $config = [
@@ -66,6 +67,7 @@ class Data extends RestManager {
 
     public function index_post()
     {
+        $flag = 0;
         $province_id = (int) $this->post('province_id');
         $district_id = (int) $this->post('district_id');
         $village_id = (int) $this->post('village_id');
@@ -119,6 +121,7 @@ class Data extends RestManager {
 
     public function index_put()
     {
+        $flag = 0;
         $province_id = (int) $this->put('province_id');
         $district_id = (int) $this->put('district_id');
         $village_id = (int) $this->put('village_id');
@@ -172,6 +175,7 @@ class Data extends RestManager {
 
     public function index_delete()
     {
+        $flag = 0;
         $config = [
             'catIdSegment' => 3,
             'isEditOrDeleteSegment' => 4

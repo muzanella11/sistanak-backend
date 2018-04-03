@@ -18,6 +18,7 @@ class OwnershipDetail extends RestManager {
 
     public function index_get()
     {
+        $flag = 0;
         $queryString = $this->input->get(); // Query String for filter data :)
 
         $config = [
@@ -66,6 +67,7 @@ class OwnershipDetail extends RestManager {
 
     public function index_post()
     {
+        $flag = 0;
         $ownership_id = $this->post('ownership_id');
         $animal_id = $this->post('animal_id');
         $group_id = $this->post('group_id');
@@ -109,6 +111,7 @@ class OwnershipDetail extends RestManager {
 
     public function index_put()
     {
+        $flag = 0;
         $ownership_id = $this->put('ownership_id');
         $animal_id = $this->put('animal_id');
         $group_id = $this->put('group_id');
@@ -152,6 +155,7 @@ class OwnershipDetail extends RestManager {
 
     public function index_delete()
     {
+        $flag = 0;
         $config = [
             'catIdSegment' => 3,
             'isEditOrDeleteSegment' => 4

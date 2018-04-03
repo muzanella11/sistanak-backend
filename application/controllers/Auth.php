@@ -66,6 +66,7 @@ class Auth extends RestManager {
 
     public function authorization_post()
     {
+        $flag = 0;
         $username = $this->post('username');
         $password = $this->enem_templates->enem_secret($this->post('password'));
 

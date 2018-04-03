@@ -93,6 +93,7 @@ class EnemBot extends RestManager {
 
     public function superadmin_get()
     {
+        $flag = 0;
         $queryString = $this->input->get(); // Query String for filter data :)
 
         $config = [
@@ -141,6 +142,7 @@ class EnemBot extends RestManager {
 
     public function superadmin_post()
     {
+        $flag = 0;
         $name = $this->post('name');
         $nik = $this->post('nik');
         $username = $this->post('username');
@@ -186,6 +188,7 @@ class EnemBot extends RestManager {
 
     public function superadmin_put()
     {
+        $flag = 0;
         $name = $this->put('name');
         $nik = $this->put('nik');
         $username = $this->put('username');
@@ -231,6 +234,7 @@ class EnemBot extends RestManager {
 
     public function superadmin_delete()
     {
+        $flag = 0;
         $config = [
             'catIdSegment' => 3,
             'isEditOrDeleteSegment' => 4
@@ -256,6 +260,7 @@ class EnemBot extends RestManager {
 
     public function botuser_post() 
     {
+        $flag = 0;
         ini_set('max_execution_time', 0);
         
         $start = microtime(TRUE);

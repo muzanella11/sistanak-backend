@@ -16,6 +16,7 @@ class User extends RestManager {
 
     public function index_get()
     {
+        $flag = 0;
         $queryString = $this->input->get(); // Query String for filter data :)
 
         $config = [
@@ -59,6 +60,7 @@ class User extends RestManager {
 
     public function index_post()
     {
+        $flag = 0;
         $name = $this->post('name');
         $nik = $this->post('nik');
         $username = $this->post('username');
@@ -101,6 +103,7 @@ class User extends RestManager {
 
     public function index_put()
     {
+        $flag = 0;
         $name = $this->put('name');
         $nik = $this->put('nik');
         $username = $this->put('username');
@@ -145,6 +148,7 @@ class User extends RestManager {
 
     public function index_delete()
     {
+        $flag = 0;
         $config = [
             'catIdSegment' => 2,
             'isEditOrDeleteSegment' => 3
