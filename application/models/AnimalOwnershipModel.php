@@ -64,9 +64,9 @@
                     }
                 } elseif ($filter === 'create_sql') {
                     if(is_array($limit)) {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE ".$filter_key." LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
+                        $sql    =   "SELECT * FROM {$this->tableName} ".$filter_key." LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
                     } else {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE ".$filter_key."";
+                        $sql    =   "SELECT * FROM {$this->tableName} ".$filter_key."";
                     }
                 }
             } else {

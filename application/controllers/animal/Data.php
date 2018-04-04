@@ -65,6 +65,14 @@ class Data extends RestManager {
 
         $data['totalData'] = count($getTotalData['data']);
 
+        foreach ($data['data'] as $key => $value) {
+            $dataMaster = json_encode($data['data'][$key]);
+            $dataMasterEncode = json_decode($dataMaster, TRUE);
+            $data['data'][$key] = $dataMasterEncode;
+            $animalId = (int) $data['data'][$key]['animal_id'];
+            $data['data'][$key]['animal_id'] = $animalId;
+        }
+
         if ($data['status'] === 'Problem')
         {
             $flag = 1;

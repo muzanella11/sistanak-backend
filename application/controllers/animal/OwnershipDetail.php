@@ -173,7 +173,7 @@ class OwnershipDetail extends RestManager {
             [
                 'className' => $this->className,
                 'modelName' => $this->modelName,
-                'fieldName' => 'ownership_id'
+                'fieldName' => 'ownership_detail_id'
             ]
         ];
         

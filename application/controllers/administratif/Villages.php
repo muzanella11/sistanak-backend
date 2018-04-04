@@ -51,11 +51,21 @@ class Villages extends RestManager {
             }
 
             $dataModel[0]['filter'] = 'create_sql';
-            $dataModel[0]['filterKey'] = 'name like "%'.$queryString['q'].'%" or villages_id like "%'.$queryString['village'].'%" or district_id like "%'.$queryString['district'].'%"';
+            $dataModel[0]['filterKey'] = $queryString['q'] !== 'null' || $queryString['district'] !== 'null' ? 'WHERE name like "%'.$queryString['q'].'%" or district_id like "%'.$queryString['district'].'%"' : null;
             $dataModel[0]['fieldTarget'] = null;
         }
         
         $data = $this->CrudManagement->run($config, $dataModel);
+
+        foreach ($data['data'] as $key => $value) {
+            $dataMaster = json_encode($data['data'][$key]);
+            $dataMasterEncode = json_decode($dataMaster, TRUE);
+            $data['data'][$key] = $dataMasterEncode;
+            $villagesId = (int) $data['data'][$key]['villages_id'];
+            $districtId = (int) $data['data'][$key]['district_id'];
+            $data['data'][$key]['villages_id'] = $villagesId;
+            $data['data'][$key]['district_id'] = $districtId;
+        }
 
         if ($data['status'] === 'Problem')
         {

@@ -33,8 +33,8 @@ class Provinces extends RestManager {
                 'filter' => '',
                 'filterKey' => '',
                 'limit' => [
-                    'startLimit' => 0,
-                    'limitData' => 10000
+                    'startLimit' => isset($queryString['offset']) ? $queryString['offset'] : 0,
+                    'limitData' => isset($queryString['limit']) ? $queryString['limit'] : 10000
                 ],
                 'fieldTarget' => 'name',
                 'queryString' => $queryString,
@@ -51,11 +51,19 @@ class Provinces extends RestManager {
             }
 
             $dataModel[0]['filter'] = 'create_sql';
-            $dataModel[0]['filterKey'] = 'name like "%'.$queryString['q'].'%" or provinces_id like "%'.$queryString['province'].'%"';
+            $dataModel[0]['filterKey'] = $queryString['q'] !== 'null' || $queryString['province'] !== 'null' ? 'WHERE name like "%'.$queryString['q'].'%" or provinces_id like "%'.$queryString['province'].'%"' : null;
             $dataModel[0]['fieldTarget'] = null;
         }
         
         $data = $this->CrudManagement->run($config, $dataModel);
+
+        foreach ($data['data'] as $key => $value) {
+            $dataMaster = json_encode($data['data'][$key]);
+            $dataMasterEncode = json_decode($dataMaster, TRUE);
+            $data['data'][$key] = $dataMasterEncode;
+            $provId = (int) $data['data'][$key]['provinces_id'];
+            $data['data'][$key]['provinces_id'] = $provId;
+        }
 
         if ($data['status'] === 'Problem')
         {
