@@ -17,8 +17,8 @@
         }
 
         function addDataUser ($data) {
-            $sql    =   "INSERT INTO {$this->tableName} (name, nik, username, password, email, phone, user_role, date_created)
-                            VALUES('".$data['name']."', '".$data['nik']."', '".$data['username']."', '".$data['password']."', '".$data['email']."', '".$data['phone']."', '".$data['user_role']."', now())";
+            $sql    =   "INSERT INTO {$this->tableName} (name, nik, username, password, email, phone, user_role, address, date_created)
+                            VALUES('".$data['name']."', '".$data['nik']."', '".$data['username']."', '".$data['password']."', '".$data['email']."', '".$data['phone']."', '".$data['user_role']."', '".$data['address']."', now())";
             
             $query  =   $this->db->query($sql);
             $latestId = $this->db->insert_id();
@@ -101,6 +101,7 @@
             $email = "email='".$data['email']."'";
             $phone = "phone='".$data['phone']."'";
             $user_role = "user_role='".$data['user_role']."'";
+            $address = "address='".$data['address']."'";
             $assign_task = "assign_task='".$data['assign_task']."'";
 
             $query = [];

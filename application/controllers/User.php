@@ -65,6 +65,33 @@ class User extends RestManager {
         $data['totalData'] = count($getTotalData['data']);
         // End pagination
 
+        // Get data ownership detail
+        $dataModelRoleDetail = [
+            [
+                'className' => 'Role',
+                'modelName' => 'RoleModel',
+                'filter' => 'id',
+                'filterKey' => '',
+                'limit' => null,
+                'fieldTarget' => 'name',
+                'dataMaster' => []
+            ]
+        ];
+
+        foreach ($data['data'] as $key => $value) {
+            if ($value->user_role)
+            {
+                $dataModelRoleDetail[0]['filterKey'] = $value->user_role;
+                $dataRoleDetail = $this->CrudManagement->run($config, $dataModelRoleDetail);
+                
+                $dataMaster = json_encode($data['data'][$key]);
+                $dataMasterEncode = json_decode($dataMaster, TRUE);
+                $dataMasterEncode['user_role_detail'] = $dataRoleDetail['data'][0];
+                $dataMasterResult = $dataMasterEncode;
+                $data['data'][$key] = $dataMasterResult;
+            }
+        }
+
         foreach ($data['data'] as $key => $value) {
             $dataMaster = json_encode($data['data'][$key]);
             $dataMasterEncode = json_decode($dataMaster, TRUE);
@@ -92,6 +119,7 @@ class User extends RestManager {
         $email = $this->post('email');
         $phone = $this->post('phone');
         $user_role = $this->post('user_role');
+        $address = $this->post('address');
 
         $config = [
             'catIdSegment' => 2,
@@ -115,7 +143,8 @@ class User extends RestManager {
                     'password' => $password,
                     'email' => $email,
                     'phone' => $phone,
-                    'user_role' => $user_role
+                    'user_role' => $user_role,
+                    'address' => $address
                 ]
             ]
         ];
@@ -135,6 +164,7 @@ class User extends RestManager {
         $email = $this->put('email');
         $phone = $this->put('phone');
         $user_role = $this->put('user_role');
+        $address = $this->put('address');
         $assign_task = $this->put('assign_task');
 
         $config = [
@@ -160,6 +190,7 @@ class User extends RestManager {
                     'email' => $email,
                     'phone' => $phone,
                     'user_role' => $user_role,
+                    'address' => $address,
                     'assign_task' => $assign_task
                 ]
             ]
