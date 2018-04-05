@@ -17,8 +17,8 @@
         }
 
         function addDataRole ($data) {
-            $sql    =   "INSERT INTO {$this->tableName} (name, status_role, date_created)
-                            VALUES('".$data['name']."', '".$data['status_role']."', now())";
+            $sql    =   "INSERT INTO {$this->tableName} (name, description, status_role, date_created)
+                            VALUES('".$data['name']."', '".$data['description']."', '".$data['status_role']."', now())";
             
             $query  =   $this->db->query($sql);
             $latestId = $this->db->insert_id();
@@ -70,9 +70,9 @@
                     }
                 } elseif ($filter === 'create_sql') {
                     if(is_array($limit)) {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE ".$filter_key." LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
+                        $sql    =   "SELECT * FROM {$this->tableName} ".$filter_key." LIMIT ".$limit['startLimit'].",".$limit['limitData']."";
                     } else {
-                        $sql    =   "SELECT * FROM {$this->tableName} WHERE ".$filter_key."";
+                        $sql    =   "SELECT * FROM {$this->tableName} ".$filter_key."";
                     }
                 }
             } else {
@@ -95,6 +95,7 @@
 
         function updateDataRole($data, $findBy = '', $findByValue = '') {
             $name = "name='".$data['name']."'";
+            $description = "description='".$data['description']."'";
             $status_role = "status_role='".$data['status_role']."'";
             $findBy = 'role_id';
 

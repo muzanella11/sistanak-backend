@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH . '/libraries/RestManager.php';
 require APPPATH . '/libraries/CrudManagement.php';
 
-class User extends RestManager {
+class Role extends RestManager {
     function __construct () 
     {
         // Construct the parent class
@@ -26,8 +26,8 @@ class User extends RestManager {
 
         $dataModel = [
             [
-                'className' => 'User',
-                'modelName' => 'UserModel',
+                'className' => 'Role',
+                'modelName' => 'RoleModel',
                 'filter' => '',
                 'filterKey' => '',
                 'limit' => [
@@ -49,7 +49,7 @@ class User extends RestManager {
             }
 
             $dataModel[0]['filter'] = 'create_sql';
-            $dataModel[0]['filterKey'] = $queryString['q'] !== 'null' ? 'WHERE name like "%'.$queryString['q'].'%" or user_role like "%'.$queryString['q'].'%" or nik like "%'.$queryString['q'].'%"' : null;
+            $dataModel[0]['filterKey'] = $queryString['q'] !== 'null' || $queryString['role'] !== 'null' ? 'WHERE name like "%'.$queryString['q'].'%" or user_role like "%'.$queryString['role'].'%"' : null;
             $dataModel[0]['fieldTarget'] = null;
         }
         
@@ -69,14 +69,13 @@ class User extends RestManager {
             $dataMaster = json_encode($data['data'][$key]);
             $dataMasterEncode = json_decode($dataMaster, TRUE);
             $data['data'][$key] = $dataMasterEncode;
-            $userId = (int) $data['data'][$key]['user_id'];
-            $nik = (int) $data['data'][$key]['nik'];
-            $role = (int) $data['data'][$key]['user_role'];
-            $assignTask = (int) $data['data'][$key]['assign_task'];
-            $data['data'][$key]['user_id'] = $userId;
-            $data['data'][$key]['user_role'] = $role;
-            $data['data'][$key]['assign_task'] = $assignTask;
-            $data['data'][$key]['nik'] = $nik;
+            $roleId = (int) $data['data'][$key]['role_id'];
+            $data['data'][$key]['role_id'] = $roleId;
+        }
+
+        if ($data['status'] === 'Problem')
+        {
+            $flag = 1;
         }
 
         return $this->response($data, isset($flag) && $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
@@ -86,12 +85,7 @@ class User extends RestManager {
     {
         $flag = 0;
         $name = $this->post('name');
-        $nik = $this->post('nik');
-        $username = $this->post('username');
-        $password = $this->enem_templates->enem_secret($this->post('password'));
-        $email = $this->post('email');
-        $phone = $this->post('phone');
-        $user_role = $this->post('user_role');
+        $description = $this->post('description');
 
         $config = [
             'catIdSegment' => 2,
@@ -100,8 +94,8 @@ class User extends RestManager {
 
         $dataModel = [
             [
-                'className' => 'User',
-                'modelName' => 'UserModel',
+                'className' => 'Role',
+                'modelName' => 'RoleModel',
                 'filter' => '',
                 'filterKey' => '',
                 'limit' => [
@@ -110,17 +104,18 @@ class User extends RestManager {
                 ],
                 'dataMaster' => [
                     'name' => $name,
-                    'nik' => $nik,
-                    'username' => $username,
-                    'password' => $password,
-                    'email' => $email,
-                    'phone' => $phone,
-                    'user_role' => $user_role
+                    'description' => $description,
+                    'status_role' => 0
                 ]
             ]
         ];
         
         $data = $this->CrudManagement->run($config, $dataModel);
+
+        if ($data['status'] === 'Problem')
+        {
+            $flag = 1;
+        }
 
         return $this->response($data, isset($flag) && $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
     }
@@ -129,13 +124,7 @@ class User extends RestManager {
     {
         $flag = 0;
         $name = $this->put('name');
-        $nik = $this->put('nik');
-        $username = $this->put('username');
-        $password = $this->enem_templates->enem_secret($this->put('password'));
-        $email = $this->put('email');
-        $phone = $this->put('phone');
-        $user_role = $this->put('user_role');
-        $assign_task = $this->put('assign_task');
+        $description = $this->put('description');
 
         $config = [
             'catIdSegment' => 2,
@@ -144,8 +133,8 @@ class User extends RestManager {
 
         $dataModel = [
             [
-                'className' => 'User',
-                'modelName' => 'UserModel',
+                'className' => 'Role',
+                'modelName' => 'RoleModel',
                 'filter' => '',
                 'filterKey' => '',
                 'limit' => [
@@ -154,18 +143,18 @@ class User extends RestManager {
                 ],
                 'dataMaster' => [
                     'name' => $name,
-                    'nik' => $nik,
-                    'username' => $username,
-                    'password' => $password,
-                    'email' => $email,
-                    'phone' => $phone,
-                    'user_role' => $user_role,
-                    'assign_task' => $assign_task
+                    'description' => $description,
+                    'status_role' => 0
                 ]
             ]
         ];
         
         $data = $this->CrudManagement->run($config, $dataModel);
+
+        if ($data['status'] === 'Problem')
+        {
+            $flag = 1;
+        }
 
         return $this->response($data, isset($flag) && $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
     }
@@ -180,14 +169,29 @@ class User extends RestManager {
 
         $dataModel = [
             [
-                'className' => 'User',
-                'modelName' => 'UserModel',
-                'fieldName' => 'user_id'
+                'className' => 'Role',
+                'modelName' => 'RoleModel',
+                'fieldName' => 'role_id'
             ]
         ];
         
         $data = $this->CrudManagement->run($config, $dataModel);
 
+        if ($data['status'] === 'Problem')
+        {
+            $flag = 1;
+        }
+
         return $this->response($data, isset($flag) && $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
+    }
+
+    public function ping_post() 
+    {
+        $data = [
+            'status' => 'Ok',
+            'messages' => 'Hello guys post :)'
+        ];
+        
+        return $this->set_response($data, REST_Controller::HTTP_OK);
     }
 }
