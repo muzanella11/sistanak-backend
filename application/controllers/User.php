@@ -70,7 +70,7 @@ class User extends RestManager {
         $data['totalData'] = count($getTotalData['data']);
         // End pagination
 
-        // Get data ownership detail
+        // Get data role detail
         $dataModelRoleDetail = [
             [
                 'className' => 'Role',
@@ -225,6 +225,120 @@ class User extends RestManager {
         $data = $this->CrudManagement->run($config, $dataModel);
 
         return $this->response($data, isset($flag) && $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
+    }
+
+    public function report_get()
+    {
+        $dateNow = Carbon::now();
+        $dateNow->timezone = new DateTimeZone('Asia/Jakarta');
+
+        $config = [
+            'catIdSegment' => 2,
+            'isEditOrDeleteSegment' => 3
+        ];
+
+        $dataModel = [
+            [
+                'className' => 'User',
+                'modelName' => 'UserModel',
+                'filter' => 'create_sql',
+                'filterKey' => '',
+                'limit' => '',
+                'fieldTarget' => 'name',
+                'queryString' => [],
+                'dataMaster' => []
+            ]
+        ];
+
+        $data = $this->CrudManagement->run($config, $dataModel);
+
+        // Get data role detail
+        $dataModelRoleDetail = [
+            [
+                'className' => 'Role',
+                'modelName' => 'RoleModel',
+                'filter' => 'id',
+                'filterKey' => '',
+                'limit' => null,
+                'fieldTarget' => 'name',
+                'dataMaster' => []
+            ]
+        ];
+
+        foreach ($data['data'] as $key => $value) {
+            if ($value->user_role)
+            {
+                $dataModelRoleDetail[0]['filterKey'] = $value->user_role;
+                $dataRoleDetail = $this->CrudManagement->run($config, $dataModelRoleDetail);
+                
+                $dataMaster = json_encode($data['data'][$key]);
+                $dataMasterEncode = json_decode($dataMaster, TRUE);
+                $dataMasterEncode['user_role_detail'] = $dataRoleDetail['data'][0];
+                $dataMasterResult = $dataMasterEncode;
+                $data['data'][$key] = $dataMasterResult;
+            }
+        }
+
+        foreach ($data['data'] as $key => $value) {
+            $dataMaster = json_encode($data['data'][$key]);
+            $dataMasterEncode = json_decode($dataMaster, TRUE);
+            $data['data'][$key] = $dataMasterEncode;
+            $userId = (int) $data['data'][$key]['user_id'];
+            $nik = (int) $data['data'][$key]['nik'];
+            $role = (int) $data['data'][$key]['user_role'];
+            $assignTask = (int) $data['data'][$key]['assign_task'];
+            $data['data'][$key]['user_id'] = $userId;
+            $data['data'][$key]['user_role'] = $role;
+            $data['data'][$key]['assign_task'] = $assignTask;
+            $data['data'][$key]['nik'] = $nik;
+        }
+
+        $dataContentMain = 'ini report';
+        $dataTable = $data['data'];
+
+        $dataView = [
+            'headerConfig' => [
+                'instansi' => [
+                    'region' => 'Pemerintah Kota Bogor',
+                    'name' => 'Dinas Peternakan dan Kesehatan Hewan',
+                    'address' => 'Jl. raya atas bawah agak kesamping kanan <br>
+                    Telepon: 021-2222 Fax: 022-8888888888999 <br>
+                    website: www.dinkes.com'
+                ]
+            ],
+            'titleContent' => 'Laporan Data User',
+            'dateMail' => 'Bogor, '.$dateNow->format('d F Y'),
+            'contentMain' => $dataContentMain,
+            'tableName' => 'User',
+            'contentTable' => $dataTable,
+            'footerConfig' => [
+                'assign' => [
+                    'instansi' => [
+                        'name' => 'Kepala Dinas Kesehatan',
+                        'region' => 'Kabupaten Bogor'
+                    ],
+                    'name' => 'Sukonto Legowo',
+                    'nik' => '12345678'
+                ]
+            ]
+        ];
+        $view = $this->load->view('mails/templates/DataReport', $dataView, true);
+        $configPdf = [
+            'setFooterPageNumber' => True,
+            // 'title' => 'Surat Perjalanan Dinas',
+            // 'withBreak' => true,
+            'html' => [
+                $view                
+            ]
+        ];
+        $this->pdf->run($configPdf);
+
+        $data = [
+            'status' => 'Ok',
+            'messages' => 'Hello guys :)'
+        ];
+        
+        return $this->set_response($data, REST_Controller::HTTP_OK);
     }
 
     public function penugasan_post()

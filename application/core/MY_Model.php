@@ -99,8 +99,8 @@
 
         function addDataUserEnem($data) {
 
-            $sql    =   "INSERT INTO enem_user (name, username, password, email, user_role, date_created)
-                            VALUES('".$data['name']."', '".$data['username']."', '".$data['password']."', '".$data['email']."', '".$data['role']."', now())";
+            $sql    =   "INSERT INTO enem_user (name, nik, username, password, email, address, user_role, date_created)
+                            VALUES('".$data['name']."', '".$data['nik']."', '".$data['username']."', '".$data['password']."', '".$data['email']."', '".$data['address']."', '".$data['role']."', now())";
 
             $this->db->query($sql);
 

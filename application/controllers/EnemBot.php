@@ -357,7 +357,7 @@ class EnemBot extends RestManager {
                     /** For Generate Bot User **/
                     $enem_prefix = 'enem';
                     $enem_password = $this->enem_templates->enem_secret('enem123');
-                    $enem_role = 2;
+                    $enem_role = 3;
 
 
                     // $this->load->model('enem_user_model');
@@ -377,13 +377,16 @@ class EnemBot extends RestManager {
                             $name = $enem_prefix.$nomer;
                             $username = $name;
                             $email = $name.'@enem.com';
+                            $nik = '000'.$i + 1;
 
                             $db = array(
                                 'name' => $name,
+                                'nik' => $nik,
                                 'username' => $username,
                                 'password' => $enem_password,
                                 'email' => $email,
                                 'role' => $enem_role,
+                                'address' => "Di Indonesia Jaya Merdeka !!!"
                             );
 
                             $this->enem_user_model->addDataUserEnem($db);
@@ -399,13 +402,16 @@ class EnemBot extends RestManager {
                             $name = $enem_prefix.$nomer;
                             $username = $name;
                             $email = $name.'@enem.com';
+                            $nik = '000'.$i + 1;
 
                             $db = array(
                                 'name' => $name,
+                                'nik' => $nik,
                                 'username' => $username,
                                 'password' => $enem_password,
                                 'email' => $email,
                                 'role' => $enem_role,
+                                'address' => "Di Indonesia Jaya Merdeka !!!"
                             );
 
                             $this->enem_user_model->addDataUserEnem($db);

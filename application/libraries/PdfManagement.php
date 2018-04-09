@@ -15,6 +15,12 @@ class PdfManagement {
         // $this->Mpdf->WriteHTML($config['html'], 0);
         // $this->Mpdf->AddPage();
         // $this->Mpdf->WriteHTML($config['html'], 0);
+        if (isset($config['setFooterPageNumber']))
+        {
+            // Set a simple Footer including the page number
+            $this->Mpdf->setFooter('Halaman {PAGENO}');
+        }
+
         $this->writeHtml($config);       
         
         if (isset($config['title']))
