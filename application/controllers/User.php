@@ -4,6 +4,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 require APPPATH . '/libraries/RestManager.php';
 require APPPATH . '/libraries/CrudManagement.php';
+require APPPATH . '/libraries/PdfManagement.php';
+
+use Carbon\Carbon;
 
 class User extends RestManager {
     function __construct () 
@@ -12,6 +15,8 @@ class User extends RestManager {
         parent::__construct();
         $this->load->model('enem_user_model');
         $this->CrudManagement = new CrudManagement();
+        $this->Carbon = new \Carbon\Carbon();
+        $this->pdf = new PdfManagement();
     }
 
     public function index_get()
@@ -220,5 +225,174 @@ class User extends RestManager {
         $data = $this->CrudManagement->run($config, $dataModel);
 
         return $this->response($data, isset($flag) && $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
+    }
+
+    public function penugasan_post()
+    {
+        $dateNow = Carbon::now();
+        $dateNow->timezone = new DateTimeZone('Asia/Jakarta');
+
+        $pemberi = $this->post('pemberi_id');
+        $penerima = $this->post('penerima_id');
+
+        $config = [
+            'catIdSegment' => 2,
+            'isEditOrDeleteSegment' => 3
+        ];
+
+        // Get Data Pemberi
+        $dataModelUserDetail = [
+            [
+                'className' => 'User',
+                'modelName' => 'UserModel',
+                'filter' => 'id',
+                'filterKey' => '',
+                'limit' => null,
+                'fieldTarget' => 'name',
+                'dataMaster' => []
+            ]
+        ];
+
+        $dataModelUserDetail[0]['filterKey'] = $pemberi;
+        $dataPemberiDetail = $this->CrudManagement->run($config, $dataModelUserDetail);
+        $dataPemberi = $dataPemberiDetail['data'];
+        $dataMasterPemberi = json_encode($dataPemberi);
+        $dataMasterPemberiEncode = json_decode($dataMasterPemberi, TRUE);
+
+        // Get Role Detail Pemberi
+        $dataModelRoleDetail = [
+            [
+                'className' => 'Role',
+                'modelName' => 'RoleModel',
+                'filter' => 'id',
+                'filterKey' => '',
+                'limit' => null,
+                'fieldTarget' => 'name',
+                'dataMaster' => []
+            ]
+        ];
+
+        foreach ($dataMasterPemberiEncode as $key => $value) {
+            $dataMasterPemberiEncode[$key]['user_id'] = (int) $value['user_id'];
+            $dataMasterPemberiEncode[$key]['nik'] = (int) $value['nik'];
+            $dataMasterPemberiEncode[$key]['user_role'] = (int) $value['user_role'];
+
+            // Get Data Role Pemberi
+            $dataModelRoleDetail[0]['filterKey'] = $dataMasterPemberiEncode[$key]['user_role'];
+            $dataRoleDetail = $this->CrudManagement->run($config, $dataModelRoleDetail);
+            $dataRole = $dataRoleDetail['data'][0];
+            $dataMasterRole = json_encode($dataRole);
+            $dataMasterRoleEncode = json_decode($dataMasterRole, TRUE);
+
+            $dataMasterPemberiEncode[$key]['role_detail'] = $dataMasterRoleEncode;
+        }
+
+        $dataPemberiResult = $dataMasterPemberiEncode[0]; // result Pemberi
+
+        // Get Data Penerima
+        $dataModelUserDetail[0]['filterKey'] = $penerima;
+        $dataPenerimaDetail = $this->CrudManagement->run($config, $dataModelUserDetail);
+        $dataPenerima = $dataPenerimaDetail['data'];
+        $dataPenerima = $dataPenerimaDetail['data'];
+        $dataMasterPenerima = json_encode($dataPenerima);
+        $dataMasterPenerimaEncode = json_decode($dataMasterPenerima, TRUE);
+
+        // Get Role Detail Penerima
+        foreach ($dataMasterPenerimaEncode as $key => $value) {
+            $dataMasterPenerimaEncode[$key]['user_id'] = (int) $value['user_id'];
+            $dataMasterPenerimaEncode[$key]['nik'] = (int) $value['nik'];
+            $dataMasterPenerimaEncode[$key]['user_role'] = (int) $value['user_role'];
+
+            // Get Data Role Penerima
+            $dataModelRoleDetail[0]['filterKey'] = $dataMasterPenerimaEncode[$key]['user_role'];
+            $dataRoleDetail = $this->CrudManagement->run($config, $dataModelRoleDetail);
+            $dataRole = $dataRoleDetail['data'][0];
+            $dataMasterRole = json_encode($dataRole);
+            $dataMasterRoleEncode = json_decode($dataMasterRole, TRUE);
+
+            $dataMasterPenerimaEncode[$key]['role_detail'] = $dataMasterRoleEncode;
+        }
+
+        $dataPenerimaResult = $dataMasterPenerimaEncode[0]; // result Penerima
+
+        // Mapping Content Master
+        $contenMaster = [
+            'pemberi' => [
+                'title' => 'Pejabat yang berwenang memberi perintah',
+                'name' => 'Si pemberi'
+            ],
+            'penerima' => [
+                'title' => 'Nama Pegawai yang di perintah',
+                'name' => 'Si penerima'
+            ],
+            'tujuan' => [
+                'title' => 'Maksud Perjalanan Dinas',
+                'name' => 'Dalam rangka pendataan hewan atau lingkungan kesehatan'
+            ]
+        ];
+
+        $contenMaster['pemberi']['name'] = $dataPemberiResult['name'];
+        $contenMaster['penerima']['name'] = $dataPenerimaResult['name'];
+
+        $contentMain = [];
+        $number = 1;
+        foreach ($contenMaster as $key => $value) {
+            $no = $number;
+            $dataContent = "<div style='position: relative; width: 100%; padding: 5px 0; border-top: 1px solid black; display: inline-block; font-size: 15px;'>
+                <div style='position: relative; width: 5%; float: left;'>
+                    {$no}.
+                </div>
+                <div style='position: relative; width: 45%; float: left;'>
+                    {$value['title']}
+                </div>
+                <div style='position: relative; width: 48%; float: left; padding-left: 8px;'>
+                    <span style='margin-right: 15px; display:block;'>:</span> {$value['name']}
+                </div>
+            </div>";
+            array_push($contentMain, $dataContent);
+            $number++;
+        }
+
+        $dataContentMain = implode(' ', $contentMain);
+        // var_dump(implode(' ', $contentMain));exit;
+        $dataView = [
+            'headerConfig' => [
+                'instansi' => [
+                    'region' => 'Pemerintah Kota Bogor',
+                    'name' => 'Dinas Peternakan dan Kesehatan Hewan',
+                    'address' => 'Jl. raya atas bawah agak kesamping kanan <br>
+                    Telepon: 021-2222 Fax: 022-8888888888999 <br>
+                    website: www.dinkes.com'
+                ]
+            ],
+            'dateMail' => 'Bogor, '.$dateNow->format('d F Y'),
+            'contentMain' => $dataContentMain,
+            'footerConfig' => [
+                'assign' => [
+                    'instansi' => [
+                        'name' => 'Kepala Dinas Kesehatan',
+                        'region' => 'Kabupaten Bogor'
+                    ],
+                    'name' => 'Sukonto Legowo',
+                    'nik' => '12345678'
+                ]
+            ]
+        ];
+        $view = $this->load->view('mails/templates/SuratPerjalananDinas', $dataView, true);
+        $configPdf = [
+            // 'title' => 'Surat Perjalanan Dinas',
+            // 'withBreak' => true,
+            'html' => [
+                $view                
+            ]
+        ];
+        $this->pdf->run($configPdf);
+
+        $data = [
+            'status' => 'Ok',
+            'messages' => 'Hello guys :)'
+        ];
+        
+        return $this->set_response($data, REST_Controller::HTTP_OK);
     }
 }

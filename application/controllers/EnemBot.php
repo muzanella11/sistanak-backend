@@ -7,6 +7,7 @@ require APPPATH . '/libraries/UserManagement.php';
 require APPPATH . '/libraries/CrudManagement.php';
 require APPPATH . '/libraries/Chart/ChartArea.php';
 require APPPATH . '/libraries/Chart/ChartBar.php';
+require APPPATH . '/libraries/PdfManagement.php';
 
 use Carbon\Carbon;
 use Mpdf\Mpdf;
@@ -25,6 +26,7 @@ class EnemBot extends RestManager {
         $this->Carbon = new \Carbon\Carbon();
         $this->ChartArea = new ChartArea();
         $this->ChartBar = new ChartBar();
+        $this->pdf = new PdfManagement();
     }
 
     public function botmpdf_get()
@@ -34,6 +36,55 @@ class EnemBot extends RestManager {
         // var_dump(Carbon::now());exit;
         // Mpdf::WriteHTML('<h1>Hello world!</h1>');
         // Mpdf::Output();
+        $data = [
+            'status' => 'Ok',
+            'messages' => 'Hello guys :)',
+            'data' => []
+        ];
+        
+        return $this->set_response($data, REST_Controller::HTTP_OK);
+    }
+
+    public function botmpdfcustom_get()
+    {
+        $dateNow = Carbon::now();
+        $dateNow->timezone = new DateTimeZone('Asia/Jakarta');
+        $dataView = [
+            'headerConfig' => [
+                'instansi' => [
+                    'region' => 'Pemerintah Kota Bogor',
+                    'name' => 'Dinas Peternakan dan Kesehatan Hewan',
+                    'address' => 'Jl. raya atas bawah bogor <br>
+                    Telepon: 021-2222 Fax: 022-8888888888999 <br>
+                    website: www.dinkes.com'
+                ]
+            ],
+            'dateMail' => 'Bogor, '.$dateNow->format('d F Y'),
+            'contentMain' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tincidunt eros vel dui aliquet, at porta purus tincidunt. In scelerisque ligula et ligula volutpat, quis vehicula odio facilisis. Ut congue nulla dui, et maximus eros ultricies sed. Aliquam erat volutpat. Pellentesque eu elementum urna. Nam elit dui, maximus sed mattis vel, venenatis iaculis sem. In hac habitasse platea dictumst. Curabitur id erat eget ligula pretium consectetur. Cras varius nunc sem, ut tincidunt erat pharetra ac. Vivamus pretium magna at maximus pharetra. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam lacinia, sapien ac faucibus bibendum, ligula erat ultrices urna, eget viverra lectus neque at ligula. Aliquam erat volutpat. Sed tincidunt bibendum egestas. Donec fermentum eget felis ut tempor. Mauris sit amet consectetur ipsum, vel fringilla mauris. Pellentesque eu purus felis. Fusce vel tellus vitae est hendrerit consequat. Vestibulum volutpat lacus felis, id condimentum metus tincidunt ut. Duis egestas lacus non ullamcorper semper. Curabitur tristique nisl felis, eu ultricies neque fringilla at. Aliquam rutrum commodo felis, et placerat enim viverra non. Curabitur orci quam, iaculis nec mi sed, pulvinar condimentum dolor. Etiam sed auctor orci. Vestibulum lacinia dui id consequat ultricies. Nullam lacinia turpis lectus, non venenatis eros facilisis non. Nulla urna nulla, vestibulum in erat ac, condimentum convallis felis. Phasellus feugiat, ante in dapibus condimentum, enim metus lacinia justo, non aliquam velit lectus vel dui. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed fermentum felis et nulla eleifend cursus. Nullam eget neque ac nisi pretium imperdiet. Nam at nisl pulvinar, convallis arcu sit amet, tristique lorem. Aenean lacus nulla, maximus varius dapibus quis, fermentum at lorem. Sed pulvinar, est in porta congue, velit dolor auctor ipsum, venenatis dignissim lorem ipsum a justo. Nullam egestas, urna quis aliquam porttitor, ligula felis gravida diam, id dictum enim ante quis mi. Donec arcu lectus, mattis et eros vitae, laoreet molestie ex. In viverra, ex a euismod venenatis, mi est vestibulum ligula, eu feugiat arcu est sed felis. Pellentesque tristique eu massa sit amet rhoncus. Maecenas sit amet sapien ac est sodales volutpat. Donec in finibus neque, vitae volutpat lorem. Mauris sit amet rutrum lacus. Donec semper enim enim, a finibus risus lacinia vel. Quisque ullamcorper quam suscipit enim pharetra bibendum. Vestibulum aliquet tellus est, eget iaculis lectus dictum vel. Vestibulum ut facilisis libero. Sed maximus feugiat dui, sed hendrerit lacus ultricies at. Cras sagittis augue convallis dolor scelerisque, eu imperdiet nisi pretium. Suspendisse sollicitudin mollis finibus. Fusce convallis lobortis magna eget pellentesque. Nam euismod faucibus dui in ultrices. Cras consectetur non ex et tempus. Nullam vel ipsum vel orci volutpat congue. Duis nunc ipsum, dignissim sit amet mauris eu, aliquam vehicula metus. Curabitur ut libero nunc. Donec pulvinar commodo elit non vestibulum. Ut finibus nisi vel orci congue, et laoreet est consequat. Vestibulum eget lacus quis mi consectetur ultricies eget faucibus risus.',
+            'footerConfig' => [
+                'assign' => [
+                    'instansi' => [
+                        'name' => 'Kepala Dinas Kesehatan',
+                        'region' => 'Kabupaten Bogor'
+                    ],
+                    'name' => 'Sukonto Legowo',
+                    'nik' => '12345678'
+                ]
+            ]
+        ];
+        $view = $this->load->view('mails/testmail', $dataView, true);
+        $configPdf = [
+            // 'title' => 'Surat Perjalanan Dinas',
+            'withBreak' => true,
+            'html' => [
+                $view,
+                $view                
+            ]
+        ];
+        $this->pdf->run($configPdf);
+        // // var_dump(Carbon::now());exit;
+        // // Mpdf::WriteHTML('<h1>Hello world!</h1>');
+        // // Mpdf::Output();
         $data = [
             'status' => 'Ok',
             'messages' => 'Hello guys :)',
