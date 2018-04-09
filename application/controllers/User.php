@@ -325,7 +325,7 @@ class User extends RestManager {
         $view = $this->load->view('mails/templates/DataReport', $dataView, true);
         $configPdf = [
             'setFooterPageNumber' => True,
-            // 'title' => 'Surat Perjalanan Dinas',
+            'title' => 'Laporan Data User',
             // 'withBreak' => true,
             'html' => [
                 $view                
@@ -333,8 +333,11 @@ class User extends RestManager {
         ];
         $this->pdf->run($configPdf);
 
+        $location = $_SERVER['HTTP_HOST'].'/uploads/pdf/'.$configPdf['title'].'.pdf';
+
         $data = [
             'status' => 'Ok',
+            'urlData' => $location,
             'messages' => 'Hello guys :)'
         ];
         
@@ -502,11 +505,11 @@ class User extends RestManager {
         ];
         $this->pdf->run($configPdf);
 
-        $data = [
-            'status' => 'Ok',
-            'messages' => 'Hello guys :)'
-        ];
+        // $data = [
+        //     'status' => 'Ok',
+        //     'messages' => 'Hello guys :)'
+        // ];
         
-        return $this->set_response($data, REST_Controller::HTTP_OK);
+        // return $this->set_response($data, REST_Controller::HTTP_OK);
     }
 }
