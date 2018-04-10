@@ -120,7 +120,8 @@ class User extends RestManager {
         $name = $this->post('name');
         $nik = $this->post('nik');
         $username = $this->post('username');
-        $password = $this->enem_templates->enem_secret($this->post('password'));
+        // $password = $this->enem_templates->enem_secret($this->post('password'));
+        $password = $this->enem_templates->enem_secret('enem123');
         $email = $this->post('email');
         $phone = $this->post('phone');
         $user_role = $this->post('user_role');
