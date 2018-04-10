@@ -32,28 +32,28 @@
     ?>
     <tr class="tableContent">
         <td class="td" style="width: 12%; padding: 10px 10px;">
-            <?php echo $value['name']; ?>
+            <?php echo isset($value['name']) ? $value['name'] : '-'; ?>
         </td>
         <td class="td" style="width: 12%; padding: 10px 10px;">
-            <?php echo $value['nik']; ?>
+            <?php echo isset($value['nik']) ? $value['nik'] : '-'; ?>
         </td>
         <td class="td" style="width: 12%; padding: 10px 10px;">
-            <?php echo $value['email']; ?>
+            <?php echo isset($value['email']) ? $value['email'] : '-'; ?>
         </td>
         <td class="td" style="width: 12%; padding: 10px 10px;">
-            <?php echo $value['username']; ?>
+            <?php echo isset($value['username']) ? $value['username'] : '-'; ?>
         </td>
         <td class="td" style="width: 12%; padding: 10px 10px;">
-            <?php echo $value['phone']; ?>
+            <?php echo isset($value['phone']) ? $value['phone'] : '-'; ?>
         </td>
         <td class="td" style="width: 12%; padding: 10px 10px;">
-            <?php echo $value['user_role_detail']['name']; ?>
+            <?php echo isset($value['user_role_detail']['name']) ? $value['user_role_detail']['name'] : '-'; ?>
         </td>
         <td class="td" style="width: 12%; padding: 10px 10px;">
-            <?php echo $value['address']; ?>
+            <?php echo isset($value['address']) ? $value['address'] : '-'; ?>
         </td>
         <td class="td" style="width: 12%; padding: 10px 10px;">
-            <?php echo $value['name']; ?>
+            <?php echo isset($value['name']) ? $value['name'] : '-'; ?>
         </td>
     </tr>
     <?php

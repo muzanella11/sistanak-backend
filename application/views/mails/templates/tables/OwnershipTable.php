@@ -26,7 +26,7 @@
     ?>
     <tr class="tableContent">
         <td class="td" style="width: 20%; padding: 10px 10px;">
-            <?php echo $value['fullname']; ?>
+            <?php echo isset($value['fullname']) ? $value['fullname'] : '-'; ?>
         </td>
         <td class="td" style="width: 20%; padding: 10px 10px;">
             <?php echo isset($value['province_detail']['name']) ? $value['province_detail']['name'] : 'undefined'; ?>

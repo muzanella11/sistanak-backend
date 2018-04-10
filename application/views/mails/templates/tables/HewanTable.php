@@ -14,10 +14,10 @@
     ?>
     <tr class="tableContent">
         <td class="td" style="width: 12%; padding: 10px 10px;">
-            <?php echo $value['name']; ?>
+            <?php echo isset($value['name']) ? $value['name'] : '-'; ?>
         </td>
         <td class="td" style="width: 12%; padding: 10px 10px;">
-            <?php echo $value['description']; ?>
+            <?php echo isset($value['description']) ? $value['description'] : '-'; ?>
         </td>
     </tr>
     <?php
