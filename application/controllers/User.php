@@ -498,7 +498,7 @@ class User extends RestManager {
         ];
         $view = $this->load->view('mails/templates/SuratPerjalananDinas', $dataView, true);
         $configPdf = [
-            // 'title' => 'Surat Perjalanan Dinas',
+            'title' => 'Surat Perjalanan Dinas',
             // 'withBreak' => true,
             'html' => [
                 $view                
@@ -506,11 +506,14 @@ class User extends RestManager {
         ];
         $this->pdf->run($configPdf);
 
-        // $data = [
-        //     'status' => 'Ok',
-        //     'messages' => 'Hello guys :)'
-        // ];
+        $location = $_SERVER['HTTP_HOST'].'/uploads/pdf/'.$configPdf['title'].'.pdf';
+
+        $data = [
+            'status' => 'Ok',
+            'urlData' => $location,
+            'messages' => 'Hello guys :)'
+        ];
         
-        // return $this->set_response($data, REST_Controller::HTTP_OK);
+        return $this->set_response($data, REST_Controller::HTTP_OK);
     }
 }
