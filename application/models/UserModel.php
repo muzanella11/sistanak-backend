@@ -103,11 +103,16 @@
             $user_role = "user_role='".$data['user_role']."'";
             $address = "address='".$data['address']."'";
             $assign_task = "assign_task='".$data['assign_task']."'";
+            $giver_task = "giver_task='".$data['giver_task']."'";
 
             $query = [];
             foreach ($data as $key => $value) {
                 if (isset(${$key}) && $value) {
                     array_push($query, ${$key});
+                } else {
+                    if ($value === null && $key === 'giver_task') {
+                        array_push($query, ${$key});
+                    }
                 }
             }
 

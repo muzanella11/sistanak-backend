@@ -105,10 +105,39 @@ class User extends RestManager {
             $nik = (int) $data['data'][$key]['nik'];
             $role = (int) $data['data'][$key]['user_role'];
             $assignTask = (int) $data['data'][$key]['assign_task'];
+            $giverTask = (int) $data['data'][$key]['giver_task'];
             $data['data'][$key]['user_id'] = $userId;
             $data['data'][$key]['user_role'] = $role;
+            $data['data'][$key]['giver_task'] = $giverTask;
             $data['data'][$key]['assign_task'] = $assignTask;
             $data['data'][$key]['nik'] = $nik;
+        }
+
+        // Get data User detail
+        $dataModelUserDetail = [
+            [
+                'className' => 'User',
+                'modelName' => 'UserModel',
+                'filter' => 'id',
+                'filterKey' => '',
+                'limit' => null,
+                'fieldTarget' => 'name',
+                'dataMaster' => []
+            ]
+        ];
+
+        foreach ($data['data'] as $key => $value) {
+            if ($value['giver_task'])
+            {
+                $dataModelUserDetail[0]['filterKey'] = $value['giver_task'];
+                $dataUserDetail = $this->CrudManagement->run($config, $dataModelUserDetail);
+                
+                $dataMaster = json_encode($data['data'][$key]);
+                $dataMasterEncode = json_decode($dataMaster, TRUE);
+                $dataMasterEncode['giver_task_detail'] = $dataUserDetail['data'][0];
+                $dataMasterResult = $dataMasterEncode;
+                $data['data'][$key] = $dataMasterResult;
+            }
         }
 
         return $this->response($data, isset($flag) && $flag !== 1 ? REST_Controller::HTTP_OK : REST_Controller::HTTP_BAD_REQUEST);
@@ -172,6 +201,7 @@ class User extends RestManager {
         $user_role = $this->put('user_role');
         $address = $this->put('address');
         $assign_task = $this->put('assign_task');
+        $giver_task = $this->put('giver_task');
 
         $config = [
             'catIdSegment' => 2,
@@ -197,7 +227,8 @@ class User extends RestManager {
                     'phone' => $phone,
                     'user_role' => $user_role,
                     'address' => $address,
-                    'assign_task' => $assign_task
+                    'assign_task' => $assign_task,
+                    'giver_task' => $giver_task
                 ]
             ]
         ];
@@ -294,7 +325,7 @@ class User extends RestManager {
             $data['data'][$key]['nik'] = $nik;
         }
 
-        $dataContentMain = 'ini report';
+        $dataContentMain = '';
         $dataTable = $data['data'];
 
         $dataView = [
