@@ -12,6 +12,7 @@ class PdfManagement {
 
     public function run ($config = [])
     {
+        // var_dump($config);exit;
         // $this->Mpdf->WriteHTML($config['html'], 0);
         // $this->Mpdf->AddPage();
         // $this->Mpdf->WriteHTML($config['html'], 0);

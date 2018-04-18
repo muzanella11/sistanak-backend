@@ -70,6 +70,7 @@ class Data extends RestManager {
             $dataMaster = json_encode($data['data'][$key]);
             $dataMasterEncode = json_decode($dataMaster, TRUE);
             $data['data'][$key] = $dataMasterEncode;
+            $ownerShipId = (int) $data['data'][$key]['ownership_id'];
             $provinceId = (int) $data['data'][$key]['province_id'];
             $districtId = (int) $data['data'][$key]['district_id'];
             $villageId = (int) $data['data'][$key]['village_id'];
@@ -81,6 +82,7 @@ class Data extends RestManager {
             $pollution = (int) $data['data'][$key]['pollution'];
             $landArea = (int) $data['data'][$key]['land_area'];
 
+            $data['data'][$key]['ownership_id'] = $ownerShipId;
             $data['data'][$key]['province_id'] = $provinceId;
             $data['data'][$key]['district_id'] = $districtId;
             $data['data'][$key]['village_id'] = $villageId;
@@ -185,6 +187,10 @@ class Data extends RestManager {
     public function index_post()
     {
         $flag = 0;
+        $fullname = $this->post('fullname');
+        $ownership_id = (int) $this->post('ownership_id');
+        $identity_type = (int) $this->post('identity_type');
+        $identity_number = $this->post('identity_number');
         $province_id = (int) $this->post('province_id');
         $district_id = (int) $this->post('district_id');
         $village_id = (int) $this->post('village_id');
@@ -212,6 +218,10 @@ class Data extends RestManager {
                     'limitData' => 10000
                 ],
                 'dataMaster' => [
+                    'fullname' => $fullname,
+                    'ownership_id' => $ownership_id,
+                    'identity_type' => $identity_type,
+                    'identity_number' => $identity_number,
                     'province_id' => $province_id,
                     'district_id' => $district_id,
                     'village_id' => $village_id,
@@ -239,6 +249,10 @@ class Data extends RestManager {
     public function index_put()
     {
         $flag = 0;
+        $fullname = $this->put('fullname');
+        $ownership_id = (int) $this->put('ownership_id');
+        $identity_type = (int) $this->put('identity_type');
+        $identity_number = $this->put('identity_number');
         $province_id = (int) $this->put('province_id');
         $district_id = (int) $this->put('district_id');
         $village_id = (int) $this->put('village_id');
@@ -266,6 +280,10 @@ class Data extends RestManager {
                     'limitData' => 10000
                 ],
                 'dataMaster' => [
+                    'fullname' => $fullname,
+                    'ownership_id' => $ownership_id,
+                    'identity_type' => $identity_type,
+                    'identity_number' => $identity_number,
                     'province_id' => $province_id,
                     'district_id' => $district_id,
                     'village_id' => $village_id,
@@ -345,6 +363,7 @@ class Data extends RestManager {
             $dataMaster = json_encode($data['data'][$key]);
             $dataMasterEncode = json_decode($dataMaster, TRUE);
             $data['data'][$key] = $dataMasterEncode;
+            $identityType = (int) $data['data'][$key]['identity_type'];
             $provinceId = (int) $data['data'][$key]['province_id'];
             $districtId = (int) $data['data'][$key]['district_id'];
             $villageId = (int) $data['data'][$key]['village_id'];
@@ -356,6 +375,7 @@ class Data extends RestManager {
             $pollution = (int) $data['data'][$key]['pollution'];
             $landArea = (int) $data['data'][$key]['land_area'];
 
+            $data['data'][$key]['identity_type'] = $identityType;
             $data['data'][$key]['province_id'] = $provinceId;
             $data['data'][$key]['district_id'] = $districtId;
             $data['data'][$key]['village_id'] = $villageId;
@@ -489,6 +509,7 @@ class Data extends RestManager {
                 $view                
             ]
         ];
+        // var_dump($configPdf);exit;
         $this->pdf->run($configPdf);
 
         $location = $_SERVER['HTTP_HOST'].'/uploads/pdf/'.$configPdf['title'].'.pdf';

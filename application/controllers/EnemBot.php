@@ -29,6 +29,12 @@ class EnemBot extends RestManager {
         $this->pdf = new PdfManagement();
     }
 
+    public function botiseng_get()
+    {
+        $getContent = file_get_contents('http://smkn1cibinong.sch.id/');
+        var_dump($getContent);exit;
+    }
+
     public function botmpdf_get()
     {
         $this->Mpdf->WriteHTML('<h1>Hello world!</h1>');

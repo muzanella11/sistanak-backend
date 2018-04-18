@@ -17,8 +17,8 @@
         }
 
         function addDataEnvironment ($data) {
-            $sql    =   "INSERT INTO {$this->tableName} (province_id, district_id, village_id, address, drainase, hygiene, fount, pollution, food_availability, land_area, date_created)
-                            VALUES('".$data['province_id']."', '".$data['district_id']."', '".$data['village_id']."', '".$data['address']."', '".$data['drainase']."', '".$data['hygiene']."', '".$data['fount']."', '".$data['pollution']."', '".$data['food_availability']."', '".$data['land_area']."', now())";
+            $sql    =   "INSERT INTO {$this->tableName} (ownership_id, fullname, identity_type, identity_number, province_id, district_id, village_id, address, drainase, hygiene, fount, pollution, food_availability, land_area, date_created)
+                            VALUES('".$data['ownership_id']."', '".ucwords($data['fullname'])."', '".$data['identity_type']."', '".$data['identity_number']."', '".$data['province_id']."', '".$data['district_id']."', '".$data['village_id']."', '".$data['address']."', '".$data['drainase']."', '".$data['hygiene']."', '".$data['fount']."', '".$data['pollution']."', '".$data['food_availability']."', '".$data['land_area']."', now())";
             
             $query  =   $this->db->query($sql);
             $latestId = $this->db->insert_id();
@@ -88,6 +88,10 @@
         }
 
         function updateDataEnvironment($data, $findBy = '', $findByValue = '') {
+            $fullname = "fullname='".$data['fullname']."'";
+            $ownership_id = "ownership_id='".$data['ownership_id']."'";
+            $identity_type = "identity_type='".$data['identity_type']."'";
+            $identity_number = "identity_number='".$data['identity_number']."'";
             $province_id = "province_id='".$data['province_id']."'";
             $district_id = "district_id='".$data['district_id']."'";
             $village_id = "village_id='".$data['village_id']."'";

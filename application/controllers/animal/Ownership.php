@@ -212,6 +212,12 @@ class Ownership extends RestManager {
                     $data['data'][$keyData]['animal_list'][$keyAnimal]['animal_detail'] = $animalDetailMasterDecode;
                 }
             }
+
+            $data['data'][$keyData]['ownership_id'] = (int) $data['data'][$keyData]['ownership_id'];
+            $data['data'][$keyData]['province_id'] = (int) $data['data'][$keyData]['province_id'];
+            $data['data'][$keyData]['region_id'] = (int) $data['data'][$keyData]['region_id'];
+            $data['data'][$keyData]['village_id'] = (int) $data['data'][$keyData]['village_id'];
+            $data['data'][$keyData]['identity_type'] = (int) $data['data'][$keyData]['identity_type'];
         }
 
         if ($data['status'] === 'Problem')
@@ -455,6 +461,7 @@ class Ownership extends RestManager {
 
     public function report_get()
     {
+        // ini_set('memory_limit', '256M');
         $dateNow = Carbon::now();
         $dateNow->timezone = new DateTimeZone('Asia/Jakarta');
 
@@ -623,10 +630,140 @@ class Ownership extends RestManager {
                     
                     $data['data'][$keyData]['animal_list'][$keyAnimal]['animal_detail'] = $animalDetailMasterDecode;
                 }
+
+                $animalListMaster = json_encode($data['data'][$keyData]['animal_list']);
+                $animalListMasterDecode = json_decode($animalListMaster, TRUE);
+
+                $data['data'][$keyData]['animal_list'] = $animalListMasterDecode;
             }
         }
 
         // var_dump($data['data']);exit;
+        // $dataAnimalTotal = [];
+        // foreach ($data['data'] as $key => $value) {
+        //     $keyData = $key;
+        //     $animalListData = $value['animal_list'];
+        //     foreach ($animalListData as $keyEx => $valueEx) {
+        //         $keyAnimalListMapping = $keyEx;
+        //         $valueAnimal = $valueEx;
+                
+        //         $animalId = isset($valueEx['animal_detail']['animal_id']) ? (int) $valueEx['animal_detail']['animal_id'] : null;
+        //         $amountAnimal = isset($valueEx['amount']) ? (int) $valueEx['amount'] : null;
+        //         $animalName = isset($valueEx['animal_detail']['name']) ? $valueEx['animal_detail']['name'] : null;
+                
+        //         if (count($dataAnimalTotal) <= 0) {
+        //             $newAnimal = [
+        //                 'animal_id' => $animalId,
+        //                 'name'  => $animalName,
+        //                 'amount' => $amountAnimal
+        //             ];
+        //             array_push($dataAnimalTotal, $newAnimal);
+        //         } else {
+        //             foreach ($dataAnimalTotal as $keyTot => $valAnimalTot) {
+        //                 $keyAnimalTot = $keyTot;
+        //                 if ($animalId !== $valAnimalTot['animal_id']) {
+        //                     $newAnimal = [
+        //                         'animal_id' => $animalId,
+        //                         'name'  => $animalName,
+        //                         'amount' => $amountAnimal
+        //                     ];
+        //                     array_push($dataAnimalTotal, $newAnimal);
+        //                 } else {
+        //                     $dataAnimalTotal[$keyAnimalTot]['amount'] = $valAnimalTot['amount'] + $amountAnimal;
+        //                 }
+        //             }
+        //         }
+
+        //     }
+        // }
+
+        // var_dump($dataAnimalTotal);exit;
+
+        // foreach ($dataAnimalTotal as $key => $valAnimalTot) {
+        //     var_dump($valAnimalTot);exit;
+        //     if ($animalId == $valAnimalTot['animal_id']) {
+        //         $valAnimalTot['amount'] = $valAnimalTot['amount'] + $amountAnimal;
+        //     } else {
+        //         $newAnimal = [
+        //             'animal_id' => $animalId,
+        //             'name'  => $animalName,
+        //             'amount' => $amountAnimal
+        //         ];
+        //         array_push($dataAnimalTotal, $newAnimal);
+        //     }
+        // }
+
+        // Mapping Animal
+        // foreach ($animalListData as $key => $value) {
+        //     $keyAnimalListMapping = $key;
+        //     $animalId = isset($data['data'][$keyData]['animal_list'][$keyAnimalListMapping]['animal_id']) ? (int) $data['data'][$keyData]['animal_list'][$keyAnimalListMapping]['animal_id'] : null;
+        //     $amountAnimal = isset($data['data'][$keyData]['animal_list'][$keyAnimalListMapping]['amount']) ? (int) $data['data'][$keyData]['animal_list'][$keyAnimalListMapping]['amount'] : null;
+        //     $animalName = isset($data['data'][$keyData]['animal_list'][$keyAnimalListMapping]['animal_detail']['name']) ? $data['data'][$keyData]['animal_list'][$keyAnimalListMapping]['animal_detail']['name'] : null;
+            
+        //     if (!isset($dataAnimalTotal)) {
+        //         $newAnimal = [
+        //             'animal_id' => $animalId,
+        //             'name'  => $animalName,
+        //             'amount' => $amountAnimal
+        //         ];
+        //         array_push($dataAnimalTotal, $newAnimal);
+        //     } else {
+        //         foreach ($dataAnimalTotal as $key => $value) {
+        //             if ($animalId === $value['animal_id']) {
+        //                 $dataAnimalTotal[$key]['amount'] = $dataAnimalTotal[$key]['amount'] + $value['amount'];
+        //             } else {
+        //                 $newAnimal = [
+        //                     'animal_id' => $animalId,
+        //                     'name'  => $animalName,
+        //                     'amount' => $amountAnimal
+        //                 ];
+        //                 array_push($dataAnimalTotal, $newAnimal);
+        //             }
+        //         }
+        //     }
+
+        //     $newAnimal = [
+        //         'animal_id' => $animalId,
+        //         'name'  => $animalName,
+        //         'amount' => $amountAnimal
+        //     ];
+        //     array_push($dataAnimalTotal, $newAnimal);
+        // }
+        // var_dump($dataAnimalTotal);exit;
+
+        // var_dump($dataAnimalTotal);exit;
+        // ini_set('memory_limit', '80000M');        
+        // $dataResultAnimalTotal = [];
+        // if (isset($dataResultAnimalTotal)) {
+        //     var_dump('here me');exit;
+        // } else {
+        //     var_dump('me');exit;
+        // }
+        // foreach ($dataAnimalTotal as $key => $valueAnimal) {
+        //     if (count($dataResultAnimalTotal) > 0) {
+        //         foreach ($dataResultAnimalTotal as $key => $valueAnimalRes) {
+        //             if ($valueAnimal['animal_id'] === $valueAnimalRes['animal_id']) {
+        //                 $dataResultAnimalTotal[$key]['amount'] = $dataResultAnimalTotal[$key]['amount'] + $valueAnimal['amount'];
+        //             } else {
+        //                 $newAnimal = [
+        //                     'animal_id' => $valueAnimal['animal_id'],
+        //                     'name'  => $valueAnimal['name'],
+        //                     'amount' => $valueAnimal['amount']
+        //                 ];
+        //                 array_push($dataResultAnimalTotal, $newAnimal);
+        //             }
+        //         }
+        //     } else {
+        //         $newAnimal = [
+        //             'animal_id' => $valueAnimal['animal_id'],
+        //             'name'  => $valueAnimal['name'],
+        //             'amount' => $valueAnimal['amount']
+        //         ];
+        //         array_push($dataResultAnimalTotal, $newAnimal);
+        //     }
+        // }
+
+        // var_dump($dataResultAnimalTotal);exit;
 
         $dataContentMain = '';
         $dataTable = $data['data'];

@@ -68,6 +68,10 @@
                     } else {
                         $sql    =   "SELECT * FROM {$this->tableName} ".$filter_key."";
                     }
+                } elseif ($filter === 'custom_query') {
+                    if(isset($filter_key)) {
+                        $sql    =   $filter_key;
+                    } 
                 }
             } else {
                 if(is_array($limit)) {
