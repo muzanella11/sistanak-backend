@@ -465,7 +465,6 @@ class Ownership extends RestManager {
             'catIdSegment' => 3,
             'isEditOrDeleteSegment' => 4
         ];
-
         $dataModel = [
             [
                 'className' => $this->className,
@@ -478,7 +477,6 @@ class Ownership extends RestManager {
                 'dataMaster' => []
             ]
         ];
-
         $dataModel[0]['filter'] = 'custom_query';
         $dataModel[0]['filterKey'] = 'SELECT 
             -- enem_animals_ownership.ownership_id, 
@@ -493,7 +491,6 @@ class Ownership extends RestManager {
                 ON enem_animals.animal_id = enem_animals_ownership_detail.animal_id
             GROUP BY enem_animals.animal_id';
         $dataModel[0]['limit'] = null;
-
         $data = $this->CrudManagement->run($config, $dataModel);
         var_dump($data);exit;
     }
@@ -522,6 +519,177 @@ class Ownership extends RestManager {
             ]
         ];
 
+        $dataModel[0]['filter'] = 'create_sql';
+        $dataModel[0]['filterKey'] = null;
+        $dataModel[0]['limit'] = null;
+
+        $data = $this->CrudManagement->run($config, $dataModel);
+
+        // Get data province
+        $dataModelProvinceDetail = [
+            [
+                'className' => 'Provinces',
+                'modelName' => 'ProvincesModel',
+                'filter' => 'id',
+                'filterKey' => '',
+                'limit' => null,
+                'fieldTarget' => 'name',
+                'dataMaster' => []
+            ]
+        ];
+
+        foreach ($data['data'] as $key => $value) {
+            if ($value->province_id)
+            {
+                $dataModelProvinceDetail[0]['filterKey'] = $value->province_id;
+                $dataProvinceDetail = $this->CrudManagement->run($config, $dataModelProvinceDetail);
+                // var_dump($dataProvinceDetail);exit;
+                $dataMaster = json_encode($data['data'][$key]);
+                $dataMasterEncode = json_decode($dataMaster, TRUE);
+                $dataMasterEncode['province_detail'] = count($dataProvinceDetail['data']) > 0 ? $dataProvinceDetail['data'][0] : [];
+                $dataMasterResult = $dataMasterEncode;
+                $data['data'][$key] = $dataMasterResult;
+            }
+        }
+
+        // Get data region
+        $dataModelRegionDetail = [
+            [
+                'className' => 'Regencies',
+                'modelName' => 'RegenciesModel',
+                'filter' => 'id',
+                'filterKey' => '',
+                'limit' => null,
+                'fieldTarget' => 'name',
+                'dataMaster' => []
+            ]
+        ];
+
+        foreach ($data['data'] as $key => $value) {
+            if ($value['region_id'])
+            {
+                $dataModelRegionDetail[0]['filterKey'] = $value['region_id'];
+                $dataRegionDetail = $this->CrudManagement->run($config, $dataModelRegionDetail);
+
+                $dataMaster = json_encode($data['data'][$key]);
+                $dataMasterEncode = json_decode($dataMaster, TRUE);
+                $dataMasterEncode['region_detail'] = count($dataRegionDetail['data']) > 0 ? $dataRegionDetail['data'][0] : [];
+                $dataMasterResult = $dataMasterEncode;
+                $data['data'][$key] = $dataMasterResult;
+            }
+        }
+
+        // Get data village
+        $dataModelVillageDetail = [
+            [
+                'className' => 'Villages',
+                'modelName' => 'VillagesModel',
+                'filter' => 'id',
+                'filterKey' => '',
+                'limit' => null,
+                'fieldTarget' => 'name',
+                'dataMaster' => []
+            ]
+        ];
+
+        foreach ($data['data'] as $key => $value) {
+            if ($value['village_id'])
+            {
+                $dataModelVillageDetail[0]['filterKey'] = $value['village_id'];
+                $dataVillageDetail = $this->CrudManagement->run($config, $dataModelVillageDetail);
+                
+                $dataMaster = json_encode($data['data'][$key]);
+                $dataMasterEncode = json_decode($dataMaster, TRUE);
+                $dataMasterEncode['village_detail'] = count($dataVillageDetail['data']) > 0 ? $dataVillageDetail['data'][0] : [];
+                $dataMasterResult = $dataMasterEncode;
+                $data['data'][$key] = $dataMasterResult;
+            }
+        }
+
+        // Get data ownership detail
+        $dataModelOwnerDetail = [
+            [
+                'className' => 'AnimalOwnershipDetail',
+                'modelName' => 'AnimalOwnershipDetailModel',
+                'filter' => 'ownership_id',
+                'filterKey' => '',
+                'limit' => null,
+                'fieldTarget' => 'name',
+                'dataMaster' => []
+            ]
+        ];
+
+        foreach ($data['data'] as $key => $value) {
+            if ($value['ownership_id'])
+            {
+                $dataModelOwnerDetail[0]['filterKey'] = $value['ownership_id'];
+                $dataOwnerDetail = $this->CrudManagement->run($config, $dataModelOwnerDetail);
+                
+                $dataMaster = json_encode($data['data'][$key]);
+                $dataMasterEncode = json_decode($dataMaster, TRUE);
+                $dataMasterEncode['animal_list'] = $dataOwnerDetail['data'];
+                $dataMasterResult = $dataMasterEncode;
+                $data['data'][$key] = $dataMasterResult;
+            }
+        }
+
+        // Get data animal detail
+        $dataModelAnimalDetail = [
+            [
+                'className' => 'Animal',
+                'modelName' => 'AnimalModel',
+                'filter' => 'id',
+                'filterKey' => '',
+                'limit' => null,
+                'fieldTarget' => 'name',
+                'dataMaster' => []
+            ]
+        ];
+
+        foreach ($data['data'] as $key => $value) {
+            $keyData = $key;
+            foreach ($value['animal_list'] as $key => $animal) {
+                $keyAnimal = $key;
+                $animalMaster = json_encode($animal);
+                $animalMasterDecode = json_decode($animalMaster, TRUE);
+
+                $data['data'][$keyData]['animal_list'][$keyAnimal] = $animalMasterDecode;
+                $animalListDetail = $data['data'][$keyData]['animal_list'][$keyAnimal];
+                
+                if ($animalListDetail['animal_id'])
+                {
+                    $dataModelAnimalDetail[0]['filterKey'] = $animalListDetail['animal_id'];
+                    $dataAnimalDetail = $this->CrudManagement->run($config, $dataModelAnimalDetail);
+                    
+                    $animalDetailMaster = json_encode($dataAnimalDetail['data'][0]);
+                    $animalDetailMasterDecode = json_decode($animalDetailMaster, TRUE);
+                    
+                    $data['data'][$keyData]['animal_list'][$keyAnimal]['animal_detail'] = $animalDetailMasterDecode;
+                }
+
+                $animalListMaster = json_encode($data['data'][$keyData]['animal_list']);
+                $animalListMasterDecode = json_decode($animalListMaster, TRUE);
+
+                $data['data'][$keyData]['animal_list'] = $animalListMasterDecode;
+            }
+        }
+
+        $dataContentMain = '';
+        $dataOwnership = $data['data'];
+
+        // Get Total Animal
+        $dataModel = [
+            [
+                'className' => $this->className,
+                'modelName' => $this->modelName,
+                'filter' => '',
+                'filterKey' => '',
+                'limit' => '',
+                'fieldTarget' => 'fullname',
+                'queryString' => '',
+                'dataMaster' => []
+            ]
+        ];
         $dataModel[0]['filter'] = 'custom_query';
         $dataModel[0]['filterKey'] = 'SELECT 
             -- enem_animals_ownership.ownership_id, 
@@ -536,11 +704,12 @@ class Ownership extends RestManager {
                 ON enem_animals.animal_id = enem_animals_ownership_detail.animal_id
             GROUP BY enem_animals.animal_id';
         $dataModel[0]['limit'] = null;
+        $dataTotalAnimal = $this->CrudManagement->run($config, $dataModel);
 
-        $data = $this->CrudManagement->run($config, $dataModel);
-
-        $dataContentMain = '';
-        $dataTable = $data['data'];
+        $dataTable = [
+            'dataOwnership' => $dataOwnership,
+            'dataTotalAnimal' => $dataTotalAnimal['data']
+        ];
 
         $dataView = [
             'headerConfig' => [
@@ -552,7 +721,7 @@ class Ownership extends RestManager {
                     website: www.dinkes.com'
                 ]
             ],
-            'titleContent' => 'Laporan Data Kepemilikan Hewan Keseluruhan',
+            'titleContent' => 'Laporan Data Ownership',
             'dateMail' => 'Bogor, '.$dateNow->format('d F Y'),
             'contentMain' => $dataContentMain,
             'tableName' => 'Ownership',
