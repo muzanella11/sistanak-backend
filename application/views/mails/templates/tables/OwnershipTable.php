@@ -21,8 +21,8 @@
     </tr>
 
     <?php
-        if (count($contentTable) > 0) {
-            foreach ($contentTable as $key => $value) {
+        if (count($contentTable['dataOwnership']) > 0) {
+            foreach ($contentTable['dataOwnership'] as $key => $value) {
     ?>
     <tr class="tableContent">
         <td class="td" style="width: 20%; padding: 10px 10px;">
@@ -70,11 +70,11 @@
     <?php } ?>
 </table>
 
-<!-- <div style="position: relative; text-align: center; font-size: 15px; font-weight: bold; letter-spacing: 1.5; margin: 25px 0; margin-top: 500px;">
-    Total Data Hewan
+<div style="position: relative; margin: 24px 0; text-align: center; font-size: 15px; font-weight: bold; letter-spacing: 1.5;">
+    Total Data Hewan Keseluruhan
 </div>
 
-<table class="content__table" style="width: 100%;">
+<table class="content__table" style="width: 100%">
     <tr class="theadMe">
         <td class="td" style="width: 50%; padding: 10px 10px;">
             Nama Hewan
@@ -85,15 +85,15 @@
     </tr>
 
     <?php
-        if (count($contentTable) > 0) {
-            foreach ($contentTable as $key => $value) {
+        if (count($contentTable['dataTotalAnimal']) > 0) {
+            foreach ($contentTable['dataTotalAnimal'] as $key => $value) {
     ?>
     <tr class="tableContent">
-        <td class="td" style="width: 50%; padding: 10px 10px;">
-            asda
+        <td class="td" style="width: 20%; padding: 10px 10px;">
+            <?php echo isset($value->name) ? $value->name : '-'; ?>
         </td>
-        <td class="td" style="width: 50%; padding: 10px 10px;">
-            asd
+        <td class="td" style="width: 20%; padding: 10px 10px;">
+            <?php echo isset($value->total_animal) ? $value->total_animal : 0; ?>
         </td>
     </tr>
     <?php
@@ -106,4 +106,4 @@
         </td>
     </tr>
     <?php } ?>
-</table> -->
+</table>
