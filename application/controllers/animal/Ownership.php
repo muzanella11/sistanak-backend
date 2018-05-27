@@ -62,6 +62,7 @@ class Ownership extends RestManager {
         
         $data = $this->CrudManagement->run($config, $dataModel);
 
+        // For pagination
         $dataModel[0]['filter'] = 0;
         $dataModel[0]['filterKey'] = null;
         $dataModel[0]['limit'] = null;
@@ -69,6 +70,7 @@ class Ownership extends RestManager {
         $getTotalData = $this->CrudManagement->run($config, $dataModel);
 
         $data['totalData'] = count($getTotalData['data']);
+        // End pagination
 
         // Get data province
         $dataModelProvinceDetail = [

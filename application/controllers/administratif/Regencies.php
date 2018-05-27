@@ -57,6 +57,16 @@ class Regencies extends RestManager {
         
         $data = $this->CrudManagement->run($config, $dataModel);
 
+        // For pagination
+        $dataModel[0]['filter'] = 0;
+        $dataModel[0]['filterKey'] = null;
+        $dataModel[0]['limit'] = null;
+
+        $getTotalData = $this->CrudManagement->run($config, $dataModel);
+
+        $data['totalData'] = count($getTotalData['data']);
+        // End pagination
+
         foreach ($data['data'] as $key => $value) {
             $dataMaster = json_encode($data['data'][$key]);
             $dataMasterEncode = json_decode($dataMaster, TRUE);

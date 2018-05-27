@@ -137,8 +137,8 @@ class Gender extends RestManager {
                 'filter' => '',
                 'filterKey' => '',
                 'limit' => [
-                    'startLimit' => 0,
-                    'limitData' => 10000
+                    'startLimit' => isset($queryString['offset']) ? $queryString['offset'] : 0,
+                    'limitData' => isset($queryString['limit']) ? $queryString['limit'] : 10000
                 ],
                 'dataMaster' => [
                     'name' => $name,
@@ -148,6 +148,16 @@ class Gender extends RestManager {
         ];
         
         $data = $this->CrudManagement->run($config, $dataModel);
+
+        // For pagination
+        $dataModel[0]['filter'] = 0;
+        $dataModel[0]['filterKey'] = null;
+        $dataModel[0]['limit'] = null;
+
+        $getTotalData = $this->CrudManagement->run($config, $dataModel);
+
+        $data['totalData'] = count($getTotalData['data']);
+        // End pagination
 
         if ($data['status'] === 'Problem')
         {
